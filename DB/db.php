@@ -1,10 +1,5 @@
 <?php
-$con=mysqli_connect("localhost","root","","");
-if($con)
-{
-    echo "Connection established";
+$con = mysqli_connect("localhost", "root", "", "examsystem");
+if (!$con) {
+    die("Error Establishing while database connection");
 }
-else{
-    mysqli_error($con);
-}
-?>
