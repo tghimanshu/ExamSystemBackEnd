@@ -1,4 +1,5 @@
 <?php require "db/db.php" ?>
+<?php require "vendor/autoload.php" ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +13,17 @@
 
 <body>
 	<div class="container">
+		<?php echo SimpleXLSX::parse('book.xlsx')->toHTML();
+		?>
+		<?php if ($xlsx = SimpleXLSX::parse('book.xlsx')) {
+			echo '<table border="1" cellpadding="3" style="border-collapse: collapse">';
+			foreach ($xlsx->rows() as $r) {
+				echo '<tr><td>' . implode('</td><td>', $r) . '</td></tr>';
+			}
+			echo '</table>';
+		} else {
+			echo SimpleXLSX::parseError();
+		} ?>
 		<h1>Student List</h1>
 		<div class="table-responsive">
 			<table class="table table-striped table-hover">
