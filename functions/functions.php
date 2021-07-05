@@ -10,6 +10,7 @@ function getQuestionsFromExcel()
 				$i++;
 				continue;
 			} else {
+				$jsonQ[$i - 1]['qId'] = $i - 1;
 				$jsonQ[$i - 1]['question'] = $row[0];
 				$jsonQ[$i - 1]['answer1'] = $row[1];
 				$jsonQ[$i - 1]['answer2'] = $row[2];
@@ -18,7 +19,8 @@ function getQuestionsFromExcel()
 				$i++;
 			}
 		}
-		print_r(json_encode($jsonQ));
+		// print_r(json_encode($jsonQ));
+		return json_encode($jsonQ);
 	} else {
 		echo SimpleXLSX::parseError();
 	}
@@ -48,7 +50,8 @@ function getAnswersFromExcel()
 				$i++;
 			}
 		}
-		print_r(json_encode($jsonQ));
+		// print_r(json_encode($jsonQ));
+		return json_encode($jsonQ);
 	} else {
 		echo SimpleXLSX::parseError();
 	}

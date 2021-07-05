@@ -14,7 +14,6 @@
 
 <body>
 	<div class="container">
-		<?php getAnswersFromExcel() ?>
 		<h1>Student List</h1>
 		<div class="table-responsive">
 			<table class="table table-striped table-hover">
