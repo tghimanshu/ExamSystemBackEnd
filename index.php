@@ -57,6 +57,17 @@
 				</div>
 			<?php endwhile; ?>
 		</div>
+			<div class="col-3 card">
+			 	<div class="card-body">
+				<h4>Name: <?php echo "Aditya" ?></h4>
+				<h4>Roll NO: <?php echo "73" ?></h4>
+				<h4>Roll NO: <?php echo "73" ?></h4>
+				<h4>Roll NO: <?php echo "73" ?></h4>
+				<h4>Roll NO: <?php echo "73" ?></h4>
+			</div>
+			</div>
+		</div>
+		
 	</div>
 	<script src="../ExamSystemFrontEnd/assets/js/bootstrap.min.js"></script>
 </body>
