@@ -69,6 +69,7 @@ if(!$con)
                     <?php endwhile;?>
                 </div>
     </div>
+    <input type="datetime-local" name="dateTime"/>
     <script src="../../ExamSystemFrontEnd/assets/js/bootstrap.min.js"></script>
 </body>
 </html>

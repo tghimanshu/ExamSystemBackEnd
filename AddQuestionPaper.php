@@ -49,6 +49,14 @@ if (isset($_GET['psubmit'])) {
 				<label for="psubject" class="input-group-text">subject</label>
 				<input required type="text" id="psubject" class="form-control" placeholder="Enter Subject Name" name="psubject" />
 			</div>
+			<div class="input-group mb-2">
+				<label for="pstart" class="input-group-text">StartDate & time</label>
+				<input required type="datetime-local" id="pstart" class="form-control" name="datetime" />
+			</div>
+			<div class="input-group mb-2">
+				<label for="pend" class="input-group-text">End Time</label>
+				<input required type="time" id="pend" class="form-control" name="endtime" />
+			</div>
 			<h5 class="text-danger">Please rename your question paper to book file and keep it in the main directory</h5>
 			<button type="submit" class="btn btn-success" name="psubmit">Add Paper</button>
 		</form>
