@@ -1,6 +1,15 @@
 <?php require "db/db.php" ?>
 <?php require "functions/functions.php" ?>
 <?php require "vendor/autoload.php" ?>
+<?php
+
+session_start();
+if (!isset($_SESSION['email'])) {
+	header("Location: login.php");
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +23,7 @@
 
 <body>
 	<div class="container">
+		<a class="btn btn-danger" href="logout.php">LOG OUT</a>
 		<h1>Student List</h1>
 		<div class="table-responsive">
 			<table class="table table-striped table-hover">
@@ -57,17 +67,17 @@
 				</div>
 			<?php endwhile; ?>
 		</div>
-			<div class="col-3 card">
-			 	<div class="card-body">
+		<div class="col-3 card">
+			<div class="card-body">
 				<h4>Name: <?php echo "Aditya" ?></h4>
 				<h4>Roll NO: <?php echo "73" ?></h4>
 				<h4>Roll NO: <?php echo "73" ?></h4>
 				<h4>Roll NO: <?php echo "73" ?></h4>
 				<h4>Roll NO: <?php echo "73" ?></h4>
 			</div>
-			</div>
 		</div>
-		
+	</div>
+
 	</div>
 	<script src="../ExamSystemFrontEnd/assets/js/bootstrap.min.js"></script>
 </body>
