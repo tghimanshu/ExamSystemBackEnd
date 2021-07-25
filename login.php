@@ -16,6 +16,7 @@ if (isset($_POST['submit'])) {
   } else {
     if (mysqli_num_rows($query) == 1) {
       $_SESSION['email'] = $email;
+      $_SESSION['student_id'] = mysqli_fetch_assoc($query)['id'];
       header("Location: index.php");
     } else {
       $error = "Invalid Email or Password!";
@@ -41,14 +42,36 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-  <div class="app bg-primary" style="height: 100vh">
+  <section class="container-fluid">
+    <section class="row justify-content-center">
+      <section class="col-12 col-sm-6 col-md-4 row-3">
+        <form action="login.php" method="POST" class="form-container">
+          <div class="form-group">
+            <h3 class="text-center font-weight-bold text-uppercase mb-4">Student Login</h3>
+            <?php if (isset($error)) { ?>
+              <div class="alert alert-danger"><?php echo $error ?></div>
+            <?php } ?>
+            <label for="email">Email Address</label>
+            <input type="email" required class="form-control mb-2" id="email" name="email" />
+            <label for="pwd">Password</label>
+            <input type="password" required class="form-control mb-2" id="pwd" name="pwd" />
+          </div>
+          <button type="submit" class="btn btn-success btn-block mt-2" name="submit">Login</button>
+        </form>
+      </section>
+    </section>
+  </section>
+  <!-- <div class="app bg-primary" style="height: 100vh">
     <div class="row justify-content-center align-items-center" style="height: 100%">
       <div class="col-3">
         <form action="login.php" method="POST" class="bg-light p-5">
           <h4 class="text-center mb-4">STUDENT LOGIN</h4>
-          <?php if (isset($error)) { ?>
-            <div class="alert alert-danger"><?php echo $error ?></div>
-          <?php } ?>
+          <?php //if (isset($error)) { 
+          ?>
+            <div class="alert alert-danger"><?php //echo $error 
+                                            ?></div>
+          <?php //} 
+          ?>
           <label for="email">Email Address</label>
           <input type="email" required class="form-control mb-2" id="email" name="email" />
           <label for="pwd">Password</label>
@@ -59,7 +82,7 @@ if (isset($_POST['submit'])) {
         </form>
       </div>
     </div>
-  </div>
+  </div> -->
   <!-- SCRIPTS -->
   <script src="../ExamSystemFrontEnd/assets/js/bootstrap.min.js"></script>
 </body>

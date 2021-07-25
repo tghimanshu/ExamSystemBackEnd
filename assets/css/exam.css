@@ -1,0 +1,61 @@
+.countdown {
+  color: white;
+  font-weight: bold;
+  font-size: 1.4em;
+}
+.question h5 {
+  font-weight: 600;
+}
+
+input[type="radio"] {
+  margin-right: 6px;
+}
+.input-group {
+  display: flex;
+  align-items: center;
+  font-weight: 300;
+}
+
+.review-container {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.review-container input {
+  margin-right: 6px;
+}
+
+#cameraStream {
+  background-color: rgba(0, 0, 0, 0.6);
+  width: 320;
+  height: 180;
+  margin-bottom: 20px;
+}
+
+.badge {
+  border: 0.01px solid rgba(0, 0, 0, 0.2);
+}
+
+.question {
+  display: none;
+}
+
+#q0 {
+  display: block;
+}
+.card > * {
+  background: transparent;
+}
+.card {
+  background: rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  color: white;
+  overflow: hidden;
+  border-radius: 20px;
+  transition: 0.2s all;
+  text-shadow: 2px 2px 2px #000;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0px 0px 5px 0px #0d6efd;
+}

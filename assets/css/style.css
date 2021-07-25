@@ -1,0 +1,35 @@
+/* GLOBAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* GENERAL */
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  /* background-color: rgba(45, 45, 45); */
+  background: url(../background.png) no-repeat top center/cover;
+  overflow-y: auto;
+}
+h2,
+h5 {
+  margin: 0;
+}
+.navbar-brand {
+  color: white;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+/* answers */
+.subject {
+  height: 100%;
+}
+
+.navbar {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(20px) !important;
+}

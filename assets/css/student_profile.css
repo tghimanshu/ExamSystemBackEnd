@@ -1,0 +1,39 @@
+.tabs > a {
+  padding: 10px 25px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(20px);
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 20px;
+  transition: 0.2s all;
+}
+
+.tabs > a:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.card-header.bg-primary {
+  /* background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(20px) !important; */
+  background: transparent !important;
+}
+.card {
+  background: rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  color: white;
+  overflow: hidden;
+  border-radius: 20px;
+  transition: 0.2s all;
+  text-shadow: 2px 2px 2px #000;
+}
+
+.zoom {
+  transition: transform 0.2s;
+  padding: 0;
+}
+
+.card:hover {
+  transform: scale(1.02);
+  box-shadow: 0px 0px 5px 0px #0d6efd;
+}
