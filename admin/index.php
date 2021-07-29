@@ -1,90 +1,172 @@
-<?php require "db/db.php" ?>
-<?php require "functions/functions.php" ?>
-<?php require "vendor/autoload.php" ?>
-<?php
-session_start();
-if (isset($_SESSION['email'])) {
-  header("Location: index.php");
-}
+<?php require "../db/db.php" ?>
+<?php require "../functions/functions.php" ?>
+<?php require "../vendor/autoload.php" ?>
 
-if (isset($_POST['submit'])) {
-  $email = mysqli_escape_string($con, $_POST['email']);
-  $pwd = mysqli_escape_string($con, $_POST['pwd']);
-  $query = mysqli_query($con, "SELECT * FROM `student` WHERE email = '$email' AND pwd = '$pwd';");
-  if (!$query) {
-    die(mysqli_error($con));
-  } else {
-    if (mysqli_num_rows($query) == 1) {
-      $_SESSION['email'] = $email;
-      $_SESSION['student_id'] = mysqli_fetch_assoc($query)['id'];
-      header("Location: index.php");
-    } else {
-      $error = "Invalid Email or Password!";
-    }
+<?php
+
+if (isset($_GET['resumesid'])) {
+  $sid = $_GET['resumesid'];
+  $pid = $_GET['resumepid'];
+  $resumetestquery = mysqli_query($con, "UPDATE `answers` SET `submitted` = 0 WHERE `student_id` = $sid AND `paper_id` = $pid;") or die(mysqli_error($con));
+  if ($resumetestquery) {
+    header("Location: index.php?examId=$pid");
   }
 }
 
 ?>
-<!-- SONAL -->
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SARAF EXAM SYSTEM</title>
-  <!-- BOOTSTRAP -->
-  <link rel="stylesheet" href="../ExamSystemFrontEnd/assets/css/bootstrap.min.css" />
-  <!-- CUSTOM STYLES -->
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="stylesheet" href="assets/css/student_login.css" />
-</head>
+<?php include "../includes/header.php" ?>
 
-<body>
-  <section class="container-fluid">
-    <section class="row justify-content-center">
-      <section class="col-12 col-sm-6 col-md-4 row-3">
-        <form action="login.php" method="POST" class="form-container">
-          <div class="form-group">
-            <h3 class="text-center font-weight-bold text-uppercase mb-4">Student Login</h3>
-            <?php if (isset($error)) { ?>
-              <div class="alert alert-danger"><?php echo $error ?></div>
-            <?php } ?>
-            <label for="email">Email Address</label>
-            <input type="email" required class="form-control mb-2" id="email" name="email" />
-            <label for="pwd">Password</label>
-            <input type="password" required class="form-control mb-2" id="pwd" name="pwd" />
-          </div>
-          <button type="submit" class="btn btn-success btn-block mt-2" name="submit">Login</button>
-        </form>
-      </section>
-    </section>
-  </section>
-  <!-- <div class="app bg-primary" style="height: 100vh">
-    <div class="row justify-content-center align-items-center" style="height: 100%">
-      <div class="col-3">
-        <form action="login.php" method="POST" class="bg-light p-5">
-          <h4 class="text-center mb-4">STUDENT LOGIN</h4>
-          <?php //if (isset($error)) { 
-          ?>
-            <div class="alert alert-danger"><?php //echo $error 
-                                            ?></div>
-          <?php //} 
-          ?>
-          <label for="email">Email Address</label>
-          <input type="email" required class="form-control mb-2" id="email" name="email" />
-          <label for="pwd">Password</label>
-          <input type="password" required class="form-control mb-2" id="pwd" name="pwd" />
-          <button class="btn btn-success" type="submit" name="submit">
-            Submit
-          </button>
-        </form>
+<div class="app">
+  <nav class="navbar bg-primary navbar-dark py-2 justify-content-between">
+    <div class="container">
+      <h2>
+        <a class="navbar-brand">Dashboard</a>
+      </h2>
+      <div>
+        <a href="logout.php" class="btn btn-danger">Logout</a>
       </div>
     </div>
-  </div> -->
-  <!-- SCRIPTS -->
-  <script src="../ExamSystemFrontEnd/assets/js/bootstrap.min.js"></script>
-</body>
+  </nav>
+  <?php function examPapers($con)
+  { ?>
+    <div class="table-responsive mt-5 mx-5">
+      <table class="table table-striped table-hover table-bordered blurred-bg">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <?php
+        $query = mysqli_query($con, "SELECT * FROM `exampaper`");
+        $srno = 0;
+        ?>
+        <tbody>
+          <?php while ($row = mysqli_fetch_assoc($query)) : ?>
+            <tr>
+              <td><?php echo ++$srno; ?></td>
+              <td>
+                <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                  <?php echo $row['Subject'] ?>
+                </h5>
+              </td>
+              <td>
+                <div class="d-flex justify-content-center">
+                  <a href="index.php?examId=<?php echo $row['ID'] ?>" class="btn btn-success btn-sm">View</a>
+                </div>
+              </td>
+            </tr>
+          <?php endwhile; ?>
+        </tbody>
+      </table>
+    </div>
+</div>
+<?php } ?>
 
-</html>
+<?php function studentData($con)
+{ ?>
+  <div class="table-responsive mt-5 mx-5">
+    <table class="table table-striped table-hover table-bordered blurred-bg">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <?php
+      $query = mysqli_query($con, "SELECT * FROM `student`");
+      $srno = 0;
+      ?>
+      <tbody>
+        <?php while ($row = mysqli_fetch_assoc($query)) : ?>
+          <tr>
+            <td><?php echo ++$srno; ?></td>
+            <td>
+              <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                <?php echo $row['name'] ?>
+              </h5>
+            </td>
+            <td>
+              <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                <?php
+                $status = mysqli_query($con, "SELECT * FROM `answers` WHERE `student_id` = " . $row['id'] . " AND `paper_id` = " . $_GET['examId'] . ";");
+                if (mysqli_num_rows($status) == 1) {
+                  $studentStatus = mysqli_fetch_assoc($status);
+                  echo $studentStatus['submitted'] == 1 ? "Completed" : "Attempting";
+                } else {
+                  echo "Not Yet Started";
+                }
+                ?>
+              </h5>
+            </td>
+            <td>
+              <div class="d-flex justify-content-center">
+                <?php if (isset($studentStatus)) { ?>
+                  <a href="index.php?answerId=<?php echo $studentStatus['id'] ?>" class="btn btn-success btn-sm">View</a>
+                <?php } else { ?>
+                  <button href="#" class="btn btn-success btn-sm" disabled>View</button>
+                <?php } ?>
+                <?php if (isset($studentStatus) && $studentStatus['submitted'] == 1) { ?>
+                  <a href="index.php?resumesid=<?php echo $row['id'] ?>&resumepid=<?php echo $_GET['examId'] ?>" class="ms-2 btn btn-danger btn-sm">Resume Test</a>
+                <?php } ?>
+              </div>
+            </td>
+          </tr>
+        <?php endwhile; ?>
+      </tbody>
+    </table>
+  </div>
+
+<?php } ?>
+
+<?php function studentAnswers($con)
+{ ?>
+  <div class="table-responsive mt-5 mx-5">
+    <table class="table table-striped table-hover table-bordered blurred-bg">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>question</th>
+          <th>Answer</th>
+          <th>Correct Answer</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+        $query = mysqli_query($con, "SELECT * FROM `answers` WHERE `id` = " . $_GET['answerId']);
+        $data = mysqli_fetch_assoc($query);
+        $answers = json_decode(urldecode($data['answers']));
+        ?>
+        <?php
+        $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = " . $data['paper_id']);
+        $paperData = mysqli_fetch_assoc($query);
+        $q = json_decode(urldecode($paperData['Questions']), true);
+        $a = json_decode(urldecode($paperData['answers']), true);
+        ?>
+        <?php foreach ($answers as $key => $answer) { ?>
+          <tr class="<?php echo $a[$answer->qId]['answer'] != $answer->answer && $answer->answer != 0 ? 'bg-danger' : ($a[$answer->qId]['answer'] == $answer->answer ? 'bg-success' : ''); ?>">
+            <td><?php echo $key; ?></td>
+            <td><?php print_r($q[$answer->qId]['question']) ?></td>
+            <td><?php print_r($answer->answer) ?></td>
+            <td><?php print_r($a[$answer->qId]['answer']) ?></td>
+          </tr>
+        <?php } ?>
+      </tbody>
+    </table>
+  </div>
+<?php } ?>
+
+<?php
+if (isset($_GET['examId'])) {
+  studentData($con);
+} else if (isset($_GET['answerId'])) {
+  studentAnswers($con);
+} else {
+  examPapers($con);
+}
+?>
+<?php include "../includes/footer.php" ?>

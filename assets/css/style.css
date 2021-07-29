@@ -33,3 +33,15 @@ h5 {
   background: rgba(255, 255, 255, 0.2) !important;
   backdrop-filter: blur(20px) !important;
 }
+.blurred-bg {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(15px) !important;
+}
+.blurred-bg tr,
+.blurred-bg td {
+  color: white;
+  text-shadow: 2px 2px 2px #000;
+  font-weight: bold;
+  background-color: transparent;
+  text-align: center;
+}
