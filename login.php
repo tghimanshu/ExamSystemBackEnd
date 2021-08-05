@@ -5,7 +5,11 @@
 <?php
 
 $headerTitle = "Login | Student";
-$cssFiles = "<link rel='stylesheet' href='assets/css/student_login.css' />"
+$cssFiles = "<link rel='stylesheet' href='assets/css/student_login.css' />";
+
+if ((isset($_GET['email']) && $_GET['email'] == "") || (isset($_GET['pass']) && $_GET['pass'] == "")) {
+  header("Location: login.php");
+}
 
 ?>
 
@@ -45,9 +49,9 @@ if (isset($_POST['submit'])) {
             <div class="alert alert-danger"><?php echo $error ?></div>
           <?php } ?>
           <label for="email">Email Address</label>
-          <input type="email" required class="form-control mb-2" id="email" name="email" />
+          <input type="email" required class="form-control mb-2" id="email" name="email" value="<?php echo isset($_GET['email'])? $_GET['email']:'' ?>" />
           <label for="pwd">Password</label>
-          <input type="password" required class="form-control mb-2" id="pwd" name="pwd" />
+          <input type="password" required class="form-control mb-2" id="pwd" name="pwd" value="<?php echo isset($_GET['pass'])? $_GET['pass']:'' ?>" />
         </div>
         <button type="submit" class="btn btn-success btn-block mt-2" name="submit">Login</button>
       </form>

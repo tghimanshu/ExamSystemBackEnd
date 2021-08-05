@@ -18,7 +18,7 @@ if (isset($_GET['resumesid'])) {
 <?php include "../includes/header.php" ?>
 
 <div class="app">
-  <nav class="navbar bg-primary navbar-dark py-2 justify-content-between">
+  <nav class="navbar  navbar-dark py-2 justify-content-between">
     <div class="container">
       <h2>
         <a class="navbar-brand">Dashboard</a>
@@ -125,7 +125,22 @@ if (isset($_GET['resumesid'])) {
 
 <?php function studentAnswers($con)
 { ?>
-  <div class="table-responsive mt-5 mx-5">
+  <?php
+  $query = mysqli_query($con, "SELECT * FROM `answers` WHERE `id` = " . $_GET['answerId']);
+  $data = mysqli_fetch_assoc($query);
+  $answers = json_decode(urldecode($data['answers']));
+  $webcamImages = explode("~", $data['webcamImages']);
+  ?>
+  <div class="row mt-5 mx-5">
+    <?php
+    foreach ($webcamImages as $key => $value) {
+    ?>
+      <div class="col-2 mb-1"><img src="<?php echo $value ?>" alt="image" width="100%" height="auto" /></div>
+    <?php
+    }
+    ?>
+  </div>
+  <div class="table-responsive mt-2 mx-5">
     <table class="table table-striped table-hover table-bordered blurred-bg">
       <thead>
         <tr>
@@ -137,20 +152,18 @@ if (isset($_GET['resumesid'])) {
       </thead>
       <tbody>
         <?php
-        $query = mysqli_query($con, "SELECT * FROM `answers` WHERE `id` = " . $_GET['answerId']);
-        $data = mysqli_fetch_assoc($query);
-        $answers = json_decode(urldecode($data['answers']));
-        ?>
-        <?php
         $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = " . $data['paper_id']);
         $paperData = mysqli_fetch_assoc($query);
         $q = json_decode(urldecode($paperData['Questions']), true);
         $a = json_decode(urldecode($paperData['answers']), true);
+        $date = new DateTime($paperData['date']);
+        $folderName = "/admin/uploads/" . $date->format('m-d-') . $paperData['Class'] . $paperData['Subject'];
+
         ?>
         <?php foreach ($answers as $key => $answer) { ?>
           <tr class="<?php echo $a[$answer->qId]['answer'] != $answer->answer && $answer->answer != 0 ? 'bg-danger' : ($a[$answer->qId]['answer'] == $answer->answer ? 'bg-success' : ''); ?>">
             <td><?php echo $key; ?></td>
-            <td><?php print_r($q[$answer->qId]['question']) ?></td>
+            <td><?php print_r(trim($q[$answer->qId]['question']) == "" ? "<img src='$folderName/" . ($answer->qId + 1) . ".jpg' width='100px' height='auto' />" : $q[$answer->qId]['question']) ?></td>
             <td><?php print_r($answer->answer) ?></td>
             <td><?php print_r($a[$answer->qId]['answer']) ?></td>
           </tr>

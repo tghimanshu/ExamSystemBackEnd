@@ -9,7 +9,7 @@ if (!isset($_SESSION['email'])) {
 }
 $equery = mysqli_query($con, "SELECT * FROM `answers` WHERE student_id = " . $_SESSION['student_id'] . " AND paper_id = " . $_GET['id']);
 if (mysqli_num_rows($equery) !== 1) {
-    mysqli_query($con, "INSERT INTO `answers` VALUES (null, " . $_SESSION['student_id'] . ", " . $_GET['id'] . ", '', '','0')");
+    mysqli_query($con, "INSERT INTO `answers` VALUES (null, " . $_SESSION['student_id'] . ", " . $_GET['id'] . ", '', '','0', '')");
 }
 
 $tquery = mysqli_query($con, "SELECT * FROM `answers` WHERE student_id = " . $_SESSION['student_id'] . " AND paper_id = " . $_GET['id']);
@@ -58,6 +58,9 @@ echo "<script>localStorage.removeItem('timeElapsed')</script>";
         </div>
         <div class="d-none" id="timeElapsed"><?php echo (trim($myCurrPaper['timeElapsed'])); ?></div>
         <div class="d-none" id="answers"><?php echo urldecode($myCurrPaper['answers']); ?></div>
+        <div class="d-none" id="imagesDir"><?php
+                                            $date = new DateTime($data['date']);
+                                            echo "/admin/uploads/" . $date->format('m-d-') . $data['Class'] . $data['Subject'] ?></div>
         <!-- NAVBAR -->
         <!-- questions & tracker  -->
         <nav class="navbar bg-primary navbar-dark py-2">
@@ -89,8 +92,11 @@ echo "<script>localStorage.removeItem('timeElapsed')</script>";
         <!-- Camera -->
         <div class="mx-5 mt-5">
             <video id="cameraStream"></video>
+            <img src="" id="testingSS" />
         </div>
     </div>
+    <div id="superErrorContainer"></div>
+    <!-- <div id="superError"></div> -->
     <!-- SCRIPTS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="assets/js/bootstrap.min.js"></script>

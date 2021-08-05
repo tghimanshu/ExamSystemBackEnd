@@ -43,12 +43,14 @@ if (isset($_GET['id'])) {
 					<?php
 					$query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = " . $_GET['id']);
 					$data = mysqli_fetch_assoc($query);
+					$date = new DateTime($data['date']);
 					$q = json_decode(urldecode($data['Questions']), true);
 					$a = json_decode(urldecode($data['answers']), true);
+					$folderName = "/admin/uploads/" . $date->format('m-d-') . $data['Class'] . $data['Subject'];
 					?>
 					<?php for ($i = 0; $i < count($q); $i++) { ?>
 						<tr>
-							<td><?php echo  $q[$i]['question'] ?></td>
+							<td><?php echo trim($q[$i]['question']) == "" ? "<img src='$folderName/" . ($i + 1) . ".jpg' width='100px' height='auto' />" : $q[$i]['question'] ?></td>
 							<td><?php echo $q[$i]['answer1'] ?></td>
 							<td><?php echo $q[$i]['answer2'] ?></td>
 							<td><?php echo $q[$i]['answer3'] ?></td>

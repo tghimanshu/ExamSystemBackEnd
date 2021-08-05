@@ -16,6 +16,7 @@ if (isset($_POST['psubmit'])) {
 	$pEndDate = $EndDate->format('Y-m-d H:i:s');
 	$psubject = mysqli_real_escape_string($con, $_POST['psubject']);
 	$myQuestionsFile = storeUploadedFile($_FILES['pfile']);
+	$myQuestionImagesFile = storeUploadedImages($_FILES['pimgfiles'], $date->format('m-d-') . $pclass . $psubject);
 	$questions = getQuestionsFromExcel($myQuestionsFile);
 	$answers = getAnswersFromExcel($myQuestionsFile);
 	$timee = $date->diff($EndDate);
@@ -57,6 +58,8 @@ if (isset($_POST['psubmit'])) {
 		</div>
 		<label>Upload Excel Sheet</label>
 		<input required type="file" id="pfile" class="form-control" name="pfile" />
+		<label>Upload All Images</label>
+		<input type="file" id="pimgfile" class="form-control" name="pimgfiles[]" multiple />
 		<h5 class="text-danger">Please rename your question paper to book file and keep it in the main directory</h5>
 		<button type="submit" class="btn btn-success" name="psubmit">Add Paper</button>
 	</form>

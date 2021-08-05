@@ -11,6 +11,41 @@ function getFiftyId(qlen) {
 }
 
 $(document).ready(function () {
+  // CHECKING FOR KAANDS
+  let superErrorContainer = $("#superErrorContainer");
+  function resizeevent(e) {
+    if (
+      window.outerHeight === window.screen.availHeight &&
+      window.outerWidth === window.screen.availWidth
+    ) {
+      superErrorContainer.html("");
+    } else {
+      superErrorContainer.html("<div id='superError'></div>");
+    }
+  }
+
+  window.addEventListener("load", resizeevent);
+  window.addEventListener("resize", resizeevent);
+
+  $("body").on("contextmenu", function (e) {
+    return false;
+  });
+
+  document.addEventListener("keydown", function (event) {
+    console.log(event.which);
+    if (event.which == "123") {
+      event.preventDefault();
+    }
+    if (event.ctrlKey || event.shiftKey || event.altKey) {
+      // event.preventDefault();
+      // superErrorContainer.html("<div id='superError'></div>");
+      // alert("you cant click me")
+    } else {
+      superErrorContainer.html("");
+    }
+  });
+
+  // END OF CHECKING FOR KAANDS
   let student_id = $("#student_id").text();
   let paper_id = $("#paper_id").text();
   console.log($("#answers").text());
@@ -27,6 +62,7 @@ $(document).ready(function () {
 
   let questionsDiv = $("#questions");
   let questionsFetched = $("#questions_fetched").text();
+  let imagesDir = $("#imagesDir").text();
   let questionsData = JSON.parse(JSON.parse(questionsFetched));
   let qids =
     dbAnswers.length === 0
@@ -83,7 +119,15 @@ $(document).ready(function () {
     const ans = answerSheet[i];
     questionsDiv[0].innerHTML += `
                         <div id="q${i}" class="question">
-                            <h5>${i + 1}. ${questionsData[id].question}</h5>
+                            <h5>${i + 1}. ${
+      questionsData[id].question.trim() === ""
+        ? "<img src='" +
+          imagesDir +
+          "/" +
+          (parseInt(questionsData[id].qId) + 1) +
+          ".jpg' width='75%' height='auto' />"
+        : questionsData[id].question
+    }</h5>
                             <div class="input-group">
                                 <input name="o-${i}" type="radio" ${
       ans.answer === 1 ? "checked" : ""
@@ -204,7 +248,7 @@ $(document).ready(function () {
     ? localStorage.getItem("timeElapsed")
     : $("#timeElapsed").text() !== ""
     ? $("#timeElapsed").text()
-    : "5:00";
+    : "50:00";
   var interval = setInterval(function () {
     var timer = timer2.split(":");
     //by parsing integer, I avoid all extra string processing
@@ -231,19 +275,68 @@ $(document).ready(function () {
       timeElapsed: timer3,
     });
   }, 1000);
-});
 
-/* GETTING VIDEO STREAM */
-let video = document.getElementById("cameraStream");
-navigator.mediaDevices
-  .getUserMedia({
-    video: true,
-    audio: false,
-  })
-  .then(function (stream) {
-    video.srcObject = stream;
-    video.play();
-  })
-  .catch(function (err) {
-    console.log("An error occurred: " + err);
-  });
+  /* GETTING VIDEO STREAM */
+  let video = document.getElementById("cameraStream");
+  navigator.mediaDevices
+    .getUserMedia({
+      video: true,
+      audio: false,
+    })
+    .then(function (stream) {
+      video.srcObject = stream;
+      video.play();
+    })
+    .catch(function (err) {
+      console.log("An error occurred: " + err);
+    });
+
+  function takeASnap() {
+    const canvas = document.createElement("canvas"); // create a canvas
+    const ctx = canvas.getContext("2d"); // get its context
+    canvas.width = video.videoWidth; // set its size to the one of the video
+    canvas.height = video.videoHeight;
+    ctx.drawImage(video, 0, 0); // the video
+    return new Promise((res, rej) => {
+      canvas.toBlob(res, "image/jpeg"); // request a Blob from the canvas
+    });
+    // return canvas.toBlob(res, "image/jpeg");
+  }
+
+  function download(blob) {
+    let a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    console.log("url", a.href);
+    a.download = "screenshot.jpg";
+    document.body.appendChild(a);
+    a.click();
+  }
+
+  //**blob to dataURL**
+  function blobToDataURL(blob, callback) {
+    var a = new FileReader();
+    a.onload = function (e) {
+      callback(e.target.result);
+    };
+    a.readAsDataURL(blob);
+  }
+
+  console.log("started");
+  setInterval(
+    () => {
+      newBlob = takeASnap().then((blob) => {
+        blobToDataURL(blob, function (dataurl) {
+          $.post("answer_update.php", {
+            type: "post_image",
+            studentId: student_id,
+            paperId: paper_id,
+            dataurl: dataurl,
+          });
+        });
+      });
+    },
+    Math.floor(Math.random() * 12) * 10000 === 0
+      ? 20000
+      : Math.floor(Math.random() * 12) * 10000
+  );
+});

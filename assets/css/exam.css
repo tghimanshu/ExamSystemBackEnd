@@ -54,3 +54,23 @@ input[type="radio"] {
   transition: 0.2s all;
   /* text-shadow: 2px 2px 2px #000; */
 }
+
+#superError {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+}
+
+#superError::before {
+  content:"Error";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  color: white;
+  font-size: 50px;
+}

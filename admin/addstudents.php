@@ -8,27 +8,26 @@
 
 
 if (isset($_POST['psubmit'])) {
-	date_default_timezone_set("Asia/Kolkata");
-	$pclass = mysqli_real_escape_string($con, $_POST['pclass']);
-	$date = new DateTime(mysqli_real_escape_string($con, $_POST['pdate']));
-	$EndDate = new DateTime(mysqli_real_escape_string($con, $_POST['penddate']));
-	$pdate = $date->format('Y-m-d H:i:s');
-	$pEndDate = $EndDate->format('Y-m-d H:i:s');
-	$psubject = mysqli_real_escape_string($con, $_POST['psubject']);
 	$myQuestionsFile = storeUploadedFile($_FILES['pfile']);
-	$questions = getQuestionsFromExcel($myQuestionsFile);
-	$answers = getAnswersFromExcel($myQuestionsFile);
-	$timee = $date->diff($EndDate);
-	$timeElapsed = ($timee->h != 0 ? 60 * $timee->h : $timee->i) . ':' . $timee->s + 1;
-	$pq = urlencode($questions);
-	$pa = urlencode($answers);
-	$q = mysqli_query($con, "INSERT INTO `exampaper`(`Questions`, `Class`, `Subject`,`date`,`endTime`, `answers`, `timeLimit`) VALUES ('$pq','$pclass','$psubject', '$pdate','$pEndDate', '$pa', '$timeElapsed' )");
-	if (!$q) {
-		echo "error";
-		print_r(mysqli_error($con));
-	} else {
-		header("Location: index.php");
+	$studentData = getStudentsFromExcel($myQuestionsFile);
+	foreach ($studentData as $key => $value) {
+		$name = $value['name'];
+		$rollno = $value['rollNo'];
+		$email = $value['email'];
+		$phone = $value['phone'];
+		$pass = $value['pass'];
+		mysqli_query($con, "INSERT INTO `student`(`name`, `rollno`, `class`,`division`,`phone`, `email`, `pwd`) VALUES ('$name', $rollno, 'BSCIT', 'A', $phone, '$email','$pass')") or die(mysqli_error($con));
+		sendMail($email, "SARAF COLLEGE - ACCOUNT CREDENTIALS", "
+		<h1><center>Saraf College presents</center></h1>
+		<h4>Your account credentials for your upcoming examination</h4>
+		<b>Username/Email</b>: $email<br />
+		<b>Password</b>: $pass<br />
+		<br />
+		<b>Login Link</b>: <a href='http://localhost/login.php?email=$email&pass=$pass'>Click here</a>
+		<br />
+		");
 	}
+	
 }
 
 ?>
@@ -37,24 +36,7 @@ if (isset($_POST['psubmit'])) {
 
 <div class="container">
 	<h1 class="text-center  mt-4">Add New Question Paper</h1>
-	<form action="addpaper.php" method="POST" enctype="multipart/form-data">
-		<div class="input-group mb-2">
-			<label for="pclass" class="input-group-text">Class</label>
-			<input required type="text" id="pclass" class="form-control" placeholder="Enter Class Name" name="pclass" />
-		</div>
-
-		<div class="input-group mb-2">
-			<label for="psubject" class="input-group-text">subject</label>
-			<input required type="text" id="psubject" class="form-control" placeholder="Enter Subject Name" name="psubject" />
-		</div>
-		<div class="input-group mb-2">
-			<label for="pdate" class="input-group-text">StartDate & time</label>
-			<input required type="datetime-local" id="pdate" class="form-control" name="pdate" />
-		</div>
-		<div class="input-group mb-2">
-			<label for="penddate" class="input-group-text">End Time</label>
-			<input required type="datetime-local" id="penddate" class="form-control" name="penddate" />
-		</div>
+	<form action="addstudents.php" method="POST" enctype="multipart/form-data">
 		<label>Upload Excel Sheet</label>
 		<input required type="file" id="pfile" class="form-control" name="pfile" />
 		<h5 class="text-danger">Please rename your question paper to book file and keep it in the main directory</h5>

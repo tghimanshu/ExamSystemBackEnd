@@ -5,17 +5,18 @@ function getQuestionsFromExcel($fileUrl)
 	if ($xlsx = SimpleXLSX::parse($fileUrl)) {
 		$jsonQ = array();
 		$i = 0;
+		print_r($xlsx);
 		foreach ($xlsx->rows() as $r => $row) {
 			if ($i == 0) {
 				$i++;
 				continue;
 			} else {
 				$jsonQ[$i - 1]['qId'] = $i - 1;
-				$jsonQ[$i - 1]['question'] = $row[0];
-				$jsonQ[$i - 1]['answer1'] = $row[1];
-				$jsonQ[$i - 1]['answer2'] = $row[2];
-				$jsonQ[$i - 1]['answer3'] = $row[3];
-				$jsonQ[$i - 1]['answer4'] = $row[4];
+				$jsonQ[$i - 1]['question'] = html_entity_decode($row[0]);
+				$jsonQ[$i - 1]['answer1'] = html_entity_decode($row[1]);
+				$jsonQ[$i - 1]['answer2'] = html_entity_decode($row[2]);
+				$jsonQ[$i - 1]['answer3'] = html_entity_decode($row[3]);
+				$jsonQ[$i - 1]['answer4'] = html_entity_decode($row[4]);
 				$i++;
 			}
 		}
@@ -57,27 +58,40 @@ function getAnswersFromExcel($fileUrl)
 	}
 }
 
+function generatePassword()
+{
+	// * TODO: CHECK IF PASSWORD EXISTS - IF NECESSARY
+	$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+	$pass = array();
+	$alphaLength = strlen($alphabet) - 1;
+	for ($i = 0; $i < 8; $i++) {
+		$n = rand(0, $alphaLength);
+		$pass[] = $alphabet[$n];
+	}
+	return implode($pass);
+}
+
+
 function getStudentsFromExcel($fileUrl)
 {
 	if ($xlsx = SimpleXLSX::parse($fileUrl)) {
 		$jsonS = array();
 		$i = 0;
 		foreach ($xlsx->rows() as $r => $row) {
-			if ($i == 0) {
+			if ($i == 0 || $i == 1) {
 				$i++;
 				continue;
 			} else {
-				$jsonS[$i - 1]['qId'] = $i - 1;
-				$jsonS[$i - 1]['question'] = $row[0];
-				$jsonS[$i - 1]['answer1'] = $row[1];
-				$jsonS[$i - 1]['answer2'] = $row[2];
-				$jsonS[$i - 1]['answer3'] = $row[3];
-				$jsonS[$i - 1]['answer4'] = $row[4];
+				$jsonS[$i - 1]['rollNo'] = $row[0];
+				$jsonS[$i - 1]['name'] = $row[1];
+				$jsonS[$i - 1]['email'] = $row[2];
+				$jsonS[$i - 1]['phone'] = $row[3];
+				$jsonS[$i - 1]['pass'] = generatePassword();
 				$i++;
 			}
 		}
 		// print_r(json_encode($jsonQ));
-		return json_encode($jsonS);
+		return $jsonS;
 	} else {
 		echo SimpleXLSX::parseError();
 	}
@@ -117,15 +131,45 @@ function storeUploadedFile($file)
 	return $target_file;
 }
 
-function generatePassword()
+function storeUploadedImages($files, $folder)
 {
-	// * TODO: CHECK IF PASSWORD EXISTS - IF NECESSARY
-	$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
-	$pass = array();
-	$alphaLength = strlen($alphabet) - 1;
-	for ($i = 0; $i < 8; $i++) {
-		$n = rand(0, $alphaLength);
-		$pass[] = $alphabet[$n];
+	// File upload configuration 
+	$targetDir = "uploads/" . $folder . "/";
+	$allowTypes = array('jpg', 'png', 'jpeg', 'gif');
+	$statusMsg = $errorMsg = $insertValuesSQL = $errorUpload = $errorUploadType = '';
+	$fileNames = array_filter($files['name']);
+	if (!empty($fileNames)) {
+		foreach ($files['name'] as $key => $val) {
+			// File upload path 
+			$fileName = basename($files['name'][$key]);
+			$targetFilePath = $targetDir . $fileName;
+
+			// Check whether file type is valid 
+			$fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION);
+			if (in_array($fileType, $allowTypes)) {
+				// Upload file to server 
+				if (!is_dir($targetDir)) {
+					mkdir($targetDir);
+				}
+				move_uploaded_file($files["tmp_name"][$key], $targetFilePath);
+			} else {
+				$errorUploadType .= $files['name'][$key] . ' | ';
+			}
+		}
+		return $targetDir;
+	} else {
+		$statusMsg = 'Please select a file to upload.';
 	}
-	return implode($pass);
+}
+
+function sendMail($to_email, $subject, $body)
+{
+	$headers = 'MIME-Version: 1.0' . "\r\n";
+	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+	$headers .= "From: Best Programmers  <himnesh234@gmail.com>";
+	if (mail($to_email, $subject, $body, $headers)) {
+		echo "Email successfully sent to $to_email...";
+	} else {
+		echo "Email sending failed...";
+	}
 }
