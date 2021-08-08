@@ -4,6 +4,18 @@
 
 <?php
 
+if (isset($_GET['examId'])) {
+  $headerTitle = "Students Info | Admin";
+} else if (isset($_GET['answerId'])) {
+  $headerTitle = "Student | Admin";
+} else {
+  $headerTitle = "Active Papers | Admin";
+}
+
+?>
+
+<?php
+
 if (isset($_GET['resumesid'])) {
   $sid = $_GET['resumesid'];
   $pid = $_GET['resumepid'];
@@ -18,16 +30,8 @@ if (isset($_GET['resumesid'])) {
 <?php include "../includes/header.php" ?>
 
 <div class="app">
-  <nav class="navbar navbar-dark py-2 justify-content-between">
-    <div class="container">
-      <h2>
-        <a class="navbar-brand">Dashboard</a>
-      </h2>
-      <div>
-        <a href="logout.php" class="btn btn-danger">Logout</a>
-      </div>
-    </div>
-  </nav>
+  <?php include("../includes/navbar-admin.php") ?>
+
   <div id="main"></div>
   <div class="d-none"></div>
 

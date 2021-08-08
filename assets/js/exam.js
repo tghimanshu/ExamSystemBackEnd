@@ -27,6 +27,10 @@ $(document).ready(function () {
   window.addEventListener("load", resizeevent);
   window.addEventListener("resize", resizeevent);
 
+  $(window).blur(function () {
+    superErrorContainer.html("<div id='superError'></div>");
+  });
+
   $("body").on("contextmenu", function (e) {
     return false;
   });
@@ -288,7 +292,7 @@ $(document).ready(function () {
       video.play();
     })
     .catch(function (err) {
-      console.log("An error occurred: " + err);
+      superErrorContainer.html("<div id='superError'></div>");
     });
 
   function takeASnap() {

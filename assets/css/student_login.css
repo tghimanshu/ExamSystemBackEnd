@@ -1,6 +1,6 @@
 body {
-  /* background-color: rgba(45, 45, 45); */
-  background: url(../background.png) no-repeat top center/cover;
+  background-color: rgba(45, 45, 45);
+  /* background: url(../background.png) no-repeat top center/cover; */
   padding-top: 25vh;
   overflow-y: scroll;
 }

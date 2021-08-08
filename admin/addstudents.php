@@ -27,7 +27,6 @@ if (isset($_POST['psubmit'])) {
 		<br />
 		");
 	}
-	
 }
 
 ?>
@@ -35,12 +34,12 @@ if (isset($_POST['psubmit'])) {
 <?php include "../includes/header.php" ?>
 
 <div class="container">
-	<h1 class="text-center  mt-4">Add New Question Paper</h1>
+	<h1 class="text-center  mt-4">Add New Students</h1>
 	<form action="addstudents.php" method="POST" enctype="multipart/form-data">
 		<label>Upload Excel Sheet</label>
 		<input required type="file" id="pfile" class="form-control" name="pfile" />
 		<h5 class="text-danger">Please rename your question paper to book file and keep it in the main directory</h5>
-		<button type="submit" class="btn btn-success" name="psubmit">Add Paper</button>
+		<button type="submit" class="btn btn-success" name="psubmit">Add Students</button>
 	</form>
 </div>
 

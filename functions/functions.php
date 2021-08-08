@@ -1,16 +1,35 @@
 <?php
 function getQuestionsFromExcel($fileUrl)
 {
-
 	if ($xlsx = SimpleXLSX::parse($fileUrl)) {
 		$jsonQ = array();
 		$i = 0;
-		print_r($xlsx);
+		$qs = array();
+		foreach ($xlsx->rows() as $val => $c) {
+			if (trim($c[0]) != "") {
+				array_push($qs, trim($c[0]));
+			}
+		}
+		$dups = array();
+		foreach (array_count_values($qs) as $val => $c) {
+			if ($c > 1) array_push($dups, array($val, $c));
+		}
+		print_r($dups);
+		if (count($dups) != 0) {
+			foreach ($dups as $key => $val) {
+				echo "<h4 class='mb-0'>" . $val[0] . " repeated " . $val[1] . " times</h4> <br />";
+			}
+			die();
+		}
 		foreach ($xlsx->rows() as $r => $row) {
 			if ($i == 0) {
 				$i++;
 				continue;
 			} else {
+				$answers = array($row[1], $row[2], $row[3], $row[5]);
+				foreach (array_count_values($answers) as $key => $c) {
+					if ($c > 1) die("<h1>Duplicate options in question no: " . $i);
+				}
 				$jsonQ[$i - 1]['qId'] = $i - 1;
 				$jsonQ[$i - 1]['question'] = html_entity_decode($row[0]);
 				$jsonQ[$i - 1]['answer1'] = html_entity_decode($row[1]);
