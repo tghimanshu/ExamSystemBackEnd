@@ -1,6 +1,12 @@
 <?php require "../db/db.php" ?>
 <?php require "../functions/functions.php" ?>
 <?php require "../vendor/autoload.php" ?>
+<?php
+  session_start();
+  if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+  }
+?>
 
 <?php $headerTitle = "Add Paper | Admin"; ?>
 
@@ -35,34 +41,36 @@ if (isset($_POST['psubmit'])) {
 ?>
 
 <?php include "../includes/header.php" ?>
-
-<div class="container">
-	<h1 class="text-center  mt-4">Add New Question Paper</h1>
-	<form action="addpaper.php" method="POST" enctype="multipart/form-data">
-		<div class="input-group mb-2">
-			<label for="pclass" class="input-group-text">Class</label>
-			<input required type="text" id="pclass" class="form-control" placeholder="Enter Class Name" name="pclass" />
-		</div>
-
-		<div class="input-group mb-2">
-			<label for="psubject" class="input-group-text">subject</label>
-			<input required type="text" id="psubject" class="form-control" placeholder="Enter Subject Name" name="psubject" />
-		</div>
-		<div class="input-group mb-2">
-			<label for="pdate" class="input-group-text">StartDate & time</label>
-			<input required type="datetime-local" id="pdate" class="form-control" name="pdate" />
-		</div>
-		<div class="input-group mb-2">
-			<label for="penddate" class="input-group-text">End Time</label>
-			<input required type="datetime-local" id="penddate" class="form-control" name="penddate" />
-		</div>
-		<label>Upload Excel Sheet</label>
-		<input required type="file" id="pfile" class="form-control" name="pfile" />
-		<label>Upload All Images</label>
-		<input type="file" id="pimgfile" class="form-control" name="pimgfiles[]" multiple />
-		<h5 class="text-danger">Please rename your question paper to book file and keep it in the main directory</h5>
-		<button type="submit" class="btn btn-success" name="psubmit">Add Paper</button>
-	</form>
+<div class="app">
+	<?php include "../includes/navbar-admin.php" ?>
+	<div class="container">
+		<h1 class="text-center  mt-4">Add New Question Paper</h1>
+		<form action="addpaper.php" method="POST" enctype="multipart/form-data">
+			<div class="input-group mb-2">
+				<label for="pclass" class="input-group-text">Class</label>
+				<input required type="text" id="pclass" class="form-control" placeholder="Enter Class Name" name="pclass" />
+			</div>
+	
+			<div class="input-group mb-2">
+				<label for="psubject" class="input-group-text">subject</label>
+				<input required type="text" id="psubject" class="form-control" placeholder="Enter Subject Name" name="psubject" />
+			</div>
+			<div class="input-group mb-2">
+				<label for="pdate" class="input-group-text">StartDate & time</label>
+				<input required type="datetime-local" id="pdate" class="form-control" name="pdate" />
+			</div>
+			<div class="input-group mb-2">
+				<label for="penddate" class="input-group-text">End Time</label>
+				<input required type="datetime-local" id="penddate" class="form-control" name="penddate" />
+			</div>
+			<label>Upload Excel Sheet</label>
+			<input required type="file" id="pfile" class="form-control" name="pfile" />
+			<label>Upload All Images</label>
+			<input type="file" id="pimgfile" class="form-control" name="pimgfiles[]" multiple />
+			<h5 class="text-danger">Please rename your question paper to book file and keep it in the main directory</h5>
+			<button type="submit" class="btn btn-success" name="psubmit">Add Paper</button>
+		</form>
+	</div>
 </div>
 
 <?php include "../includes/footer.php" ?>

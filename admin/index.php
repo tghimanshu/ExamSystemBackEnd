@@ -3,6 +3,12 @@
 <?php require "../vendor/autoload.php" ?>
 
 <?php
+  session_start();
+  if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+  }
+?>
+<?php
 
 if (isset($_GET['examId'])) {
   $headerTitle = "Students Info | Admin";
