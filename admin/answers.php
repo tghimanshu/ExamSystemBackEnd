@@ -23,7 +23,7 @@ $cssFiles = "<link rel='stylesheet' href='/assets/css/exam.css' /><link rel='sty
 		<div class="container mt-5">
 			<div class="table-responsive">
 				<table class="table table-bordered table-striped table-hover">
-					<thead class="table-dark">
+					<thead class="table-dark text-light">
 						<tr>
 							<th>Question</th>
 							<th>A1</th>
@@ -44,12 +44,12 @@ $cssFiles = "<link rel='stylesheet' href='/assets/css/exam.css' /><link rel='sty
 						?>
 						<?php for ($i = 0; $i < count($q); $i++) { ?>
 							<tr>
-								<td><?php echo trim($q[$i]['question']) == "" ? "<img src='$folderName/" . ($i + 1) . ".jpg' width='100px' height='auto' />" : $q[$i]['question'] ?></td>
-								<td><?php echo $q[$i]['answer1'] ?></td>
-								<td><?php echo $q[$i]['answer2'] ?></td>
-								<td><?php echo $q[$i]['answer3'] ?></td>
-								<td><?php echo $q[$i]['answer4'] ?></td>
-								<td class="text-center"><?php echo $a[$i]['answer'] ?></td>
+								<td class="text-warning"><?php echo trim($q[$i]['question']) == "" ? "<img src='$folderName/" . ($i + 1) . ".jpg' width='100px' height='auto' />" : $q[$i]['question'] ?></td>
+								<td class="text-warning"><?php echo $q[$i]['answer1'] ?></td>
+								<td class="text-warning"><?php echo $q[$i]['answer2'] ?></td>
+								<td class="text-warning"><?php echo $q[$i]['answer3'] ?></td>
+								<td class="text-warning"><?php echo $q[$i]['answer4'] ?></td>
+								<td class="text-center text-warning"><?php echo $a[$i]['answer'] ?></td>
 							</tr>
 						<?php } ?>
 					</tbody>

@@ -117,26 +117,34 @@
         }
         ?>
     </div>
+    <?php
+    $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = " . $data['paper_id']);
+    $paperData = mysqli_fetch_assoc($query);
+    $q = json_decode(urldecode($paperData['Questions']), true);
+    $a = json_decode(urldecode($paperData['answers']), true);
+    $date = new DateTime($paperData['date']);
+    $folderName = "/admin/uploads/" . $date->format('m-d-') . $paperData['Class'] . $paperData['Subject'];
+
+    ?>
+    <?php $marks = 0; ?>
+    <?php foreach ($answers as $key => $answer) { ?>
+        <?php if ($a[$answer->qId]['answer'] != $answer->answer && $answer->answer != 0) {
+            echo 'bg-danger';
+        } else if ($a[$answer->qId]['answer'] == $answer->answer) {
+            $marks++;
+        } ?>
+    <?php } ?>
     <div class="table-responsive mt-2 mx-5">
         <table class="table table-striped table-hover table-bordered blurred-bg">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>question</th>
-                    <th>Answer</th>
+                    <th>Answer <?php echo $marks; ?></th>
                     <th>Correct Answer</th>
                 </tr>
             </thead>
             <tbody>
-                <?php
-                $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = " . $data['paper_id']);
-                $paperData = mysqli_fetch_assoc($query);
-                $q = json_decode(urldecode($paperData['Questions']), true);
-                $a = json_decode(urldecode($paperData['answers']), true);
-                $date = new DateTime($paperData['date']);
-                $folderName = "/admin/uploads/" . $date->format('m-d-') . $paperData['Class'] . $paperData['Subject'];
-
-                ?>
                 <?php foreach ($answers as $key => $answer) { ?>
                     <tr class="<?php echo $a[$answer->qId]['answer'] != $answer->answer && $answer->answer != 0 ? 'bg-danger' : ($a[$answer->qId]['answer'] == $answer->answer ? 'bg-success' : ''); ?>">
                         <td><?php echo $key; ?></td>
