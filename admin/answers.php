@@ -2,6 +2,12 @@
 <?php require "../functions/functions.php" ?>
 <?php require "../vendor/autoload.php" ?>
 <?php
+  session_start();
+  if(!isset($_SESSION['email'])){
+    header("Location: login.php");
+  }
+?>
+<?php
 
 $headerTitle = "Answer Review | Admin";
 $cssFiles = "<link rel='stylesheet' href='/assets/css/exam.css' /><link rel='stylesheet' href='/assets/css/exam1.css' />"
