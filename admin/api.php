@@ -70,11 +70,11 @@
                                 $studentId = (int)$row['id'];
                                 $paperId =  (int)$_GET['examId'];
                                 $status = mysqli_query($con, "SELECT * FROM `answers` WHERE `student_id` = $studentId AND `paper_id` = $paperId;") or die(mysqli_error($con));
-
                                 if (mysqli_num_rows($status) == 1) {
                                     $studentStatus = mysqli_fetch_assoc($status);
                                     echo $studentStatus['submitted'] == 1 ? "Completed" : "Attempting";
                                 } else {
+                                    unset($studentStatus);
                                     echo "Not Yet Started";
                                 }
                                 ?>
@@ -147,7 +147,7 @@
             <tbody>
                 <?php foreach ($answers as $key => $answer) { ?>
                     <tr class="<?php echo $a[$answer->qId]['answer'] != $answer->answer && $answer->answer != 0 ? 'bg-danger' : ($a[$answer->qId]['answer'] == $answer->answer ? 'bg-success' : ''); ?>">
-                        <td><?php echo $key; ?></td>
+                        <td><?php echo $key + 1; ?></td>
                         <td><?php print_r(trim($q[$answer->qId]['question']) == "" ? "<img src='$folderName/" . ($answer->qId + 1) . ".jpg' width='100px' height='auto' />" : $q[$answer->qId]['question']) ?></td>
                         <td><?php print_r($answer->answer) ?></td>
                         <td><?php print_r($a[$answer->qId]['answer']) ?></td>
