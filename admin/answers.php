@@ -2,10 +2,10 @@
 <?php require "../functions/functions.php" ?>
 <?php require "../vendor/autoload.php" ?>
 <?php
-  session_start();
-  if(!isset($_SESSION['email'])){
-    header("Location: login.php");
-  }
+session_start();
+if (!isset($_SESSION['email'])) {
+	header("Location: login.php");
+}
 ?>
 <?php
 
@@ -18,18 +18,11 @@ $cssFiles = "<link rel='stylesheet' href='/assets/css/exam.css' /><link rel='sty
 <div class="app">
 	<?php function showQA($con)
 	{ ?>
-		<nav class="navbar py-2 ">
-			<div class="container d-flex justify-content-between align-items-center">
-				<h2>
-					<a class="navbar-brand">All Papers</a>
-				</h2>
-				<div class="countdown"></div>
-			</div>
-		</nav>
+		<?php include "../includes/navbar-admin.php" ?>
 		<div class="container mt-5">
 			<div class="table-responsive">
-				<table class="table table-bordered table-striped table-hover">
-					<thead class="table-dark">
+				<table class="table table-striped table-hover table-bordered blurred-bg">
+					<thead>
 						<tr>
 							<th>Question</th>
 							<th>A1</th>
@@ -50,12 +43,12 @@ $cssFiles = "<link rel='stylesheet' href='/assets/css/exam.css' /><link rel='sty
 						?>
 						<?php for ($i = 0; $i < count($q); $i++) { ?>
 							<tr>
-								<td><?php echo trim($q[$i]['question']) == "" ? "<img src='$folderName/" . ($i + 1) . ".jpg' width='100px' height='auto' />" : $q[$i]['question'] ?></td>
-								<td><?php echo $q[$i]['answer1'] ?></td>
-								<td><?php echo $q[$i]['answer2'] ?></td>
-								<td><?php echo $q[$i]['answer3'] ?></td>
-								<td><?php echo $q[$i]['answer4'] ?></td>
-								<td class="text-center"><?php echo $a[$i]['answer'] ?></td>
+								<td class=""><?php echo trim($q[$i]['question']) == "" ? "<img src='$folderName/" . ($i + 1) . ".jpg' width='100px' height='auto' />" : $q[$i]['question'] ?></td>
+								<td class=""><?php echo $q[$i]['answer1'] ?></td>
+								<td class=""><?php echo $q[$i]['answer2'] ?></td>
+								<td class=""><?php echo $q[$i]['answer3'] ?></td>
+								<td class=""><?php echo $q[$i]['answer4'] ?></td>
+								<td class=""><?php echo $a[$i]['answer'] ?></td>
 							</tr>
 						<?php } ?>
 					</tbody>
@@ -65,18 +58,11 @@ $cssFiles = "<link rel='stylesheet' href='/assets/css/exam.css' /><link rel='sty
 	<?php } ?>
 	<?php function showPapers($con)
 	{ ?>
-		<nav class="navbar bg-primary navbar-dark py-2 mb-5">
-			<div class="container d-flex justify-content-between align-items-center">
-				<h2>
-					<a class="navbar-brand">All Papers</a>
-				</h2>
-				<div class="countdown"></div>
-			</div>
-		</nav>
-		<div class="container">
+		<?php include "../includes/navbar-admin.php" ?>
+		<div class="container mt-5">
 			<div class="table-responsive">
-				<table class="table table-striped table-hover">
-					<thead class="table-dark">
+				<table class="table table-striped table-hover table-bordered blurred-bg">
+					<thead>
 						<tr>
 							<th class="ps-4 text-center">Subject</th>
 							<th class="text-center">Action</th>
