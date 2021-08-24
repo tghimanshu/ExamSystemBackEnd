@@ -106,13 +106,13 @@
     $query = mysqli_query($con, "SELECT * FROM `answers` WHERE `id` = " . $_GET['answerId']);
     $data = mysqli_fetch_assoc($query);
     $answers = json_decode(urldecode($data['answers']));
-    $webcamImages = explode("~", $data['webcamImages']);
+    $webcamImages = array_reverse(explode("~", $data['webcamImages']));
     ?>
-    <div class="row mt-5 mx-5">
+    <div class="row mt-5 mx-5" style="max-height: 600px;overflow-y:auto">
         <?php
         foreach ($webcamImages as $key => $value) {
         ?>
-            <div class="col-2 mb-1"><img src="<?php echo $value ?>" alt="image" width="100%" height="auto" /></div>
+            <div class="col-6 col-md-3 col-lg-2 mb-1"><img src="<?php echo $value ?>" alt="image" width="100%" height="auto" /></div>
         <?php
         }
         ?>

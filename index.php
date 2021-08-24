@@ -38,32 +38,32 @@ $query = mysqli_query($con, "SELECT * FROM exampaper");
 			</div>
 		</nav>
 		<div class="container">
-			<section id="allCategories" class="d-flex justify-content-between mt-3 tabs">
-				<a class="btn btn-light d-flex align-items-center">
+			<section id="allCategories" class="d-flex flex-column flex-md-row justify-content-between mt-3 tabs">
+				<a class="btn btn-light d-flex align-items-center mb-2">
 					<div class="btn rounded-circle text-light bg-success me-2" style="width: 35px; height: 35px">
 						1
 					</div>
 					<div class="text-light">All</div>
 				</a>
-				<a class="btn btn-light d-flex align-items-center">
+				<a class="btn btn-light d-flex align-items-center mb-2">
 					<div class="btn rounded-circle text-light bg-success me-2" style="width: 35px; height: 35px">
 						2
 					</div>
 					<div class="text-light">Yet to start</div>
 				</a>
-				<a class="btn btn-light d-flex align-items-center">
+				<a class="btn btn-light d-flex align-items-center mb-2">
 					<div class="btn rounded-circle text-light bg-info me-2" style="width: 35px; height: 35px">
 						3
 					</div>
 					<div class="text-light">Resume</div>
 				</a>
-				<a class="btn btn-light d-flex align-items-center">
+				<a class="btn btn-light d-flex align-items-center mb-2">
 					<div class="btn rounded-circle text-light bg-danger me-2" style="width: 35px; height: 35px">
 						4
 					</div>
 					<div class="text-light">Completed</div>
 				</a>
-				<a class="btn btn-dark d-flex align-items-center">
+				<a class="btn btn-dark d-flex align-items-center mb-2">
 					<div class="btn rounded-circle text-light bg-dark me-2" style="width: 35px; height: 35px">
 						5
 					</div>
@@ -76,7 +76,7 @@ $query = mysqli_query($con, "SELECT * FROM exampaper");
 					$examQuery = mysqli_query($con, "SELECT * FROM `answers` WHERE student_id = " . $_SESSION['student_id'] . " AND paper_id = " . $row['ID']);
 					$examData = mysqli_fetch_assoc($examQuery);
 					?>
-					<div class="col-lg-3 col-md-6 col-12 mt-3 zoom">
+					<div class="col-lg-3 col-md-6 col-12 mt-3 zoom px-2">
 						<div class="card">
 							<div class="card-header bg-primary">
 								<h4 class="text-center text-light"><?php echo $row['Subject'] ?></h4>

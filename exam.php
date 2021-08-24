@@ -71,9 +71,9 @@ echo "<script>localStorage.removeItem('timeElapsed')</script>";
                 <div class="countdown"></div>
             </div>
         </nav>
-        <div class="mt-5 mx-5">
+        <div class="mt-5 mx-2 mx-md-5">
             <div class="row">
-                <div class="col-12 col-lg-9">
+                <div class="col-12 col-lg-9 mb-3">
                     <div class="card">
                         <div class="card-body">
                             <div id="questions"></div>
@@ -82,7 +82,7 @@ echo "<script>localStorage.removeItem('timeElapsed')</script>";
                 </div>
                 <div class="col-12 col-lg-3">
                     <div class="card">
-                        <div class="card-body px-5">
+                        <div class="card-body px-md-5">
                             <div id="tracker" class="row"></div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@ echo "<script>localStorage.removeItem('timeElapsed')</script>";
             </div>
         </div>
         <!-- Camera -->
-        <div class="mx-5 mt-5">
+        <div class="mx-2 mx-md-5 mt-5">
             <video id="cameraStream"></video>
             <img src="" id="testingSS" />
         </div>
