@@ -27,49 +27,9 @@ $query = mysqli_query($con, "SELECT * FROM exampaper");
 <body>
 
 	<div class="app">
-		<nav class="navbar bg-primary navbar-dark py-2 justify-content-between">
-			<div class="container">
-				<h2>
-					<a class="navbar-brand">Dashboard</a>
-				</h2>
-				<div>
-					<a href="logout.php" class="btn btn-danger">Logout</a>
-				</div>
-			</div>
-		</nav>
+		<?php include "includes/navbar-Prospector_Student.php"?>
 		<div class="container">
-			<section id="allCategories" class="d-flex flex-column flex-md-row justify-content-between mt-3 tabs">
-				<a class="btn btn-light d-flex align-items-center mb-2">
-					<div class="btn rounded-circle text-light bg-success me-2" style="width: 35px; height: 35px">
-						1
-					</div>
-					<div class="text-light">All</div>
-				</a>
-				<a class="btn btn-light d-flex align-items-center mb-2">
-					<div class="btn rounded-circle text-light bg-success me-2" style="width: 35px; height: 35px">
-						2
-					</div>
-					<div class="text-light">Yet to start</div>
-				</a>
-				<a class="btn btn-light d-flex align-items-center mb-2">
-					<div class="btn rounded-circle text-light bg-info me-2" style="width: 35px; height: 35px">
-						3
-					</div>
-					<div class="text-light">Resume</div>
-				</a>
-				<a class="btn btn-light d-flex align-items-center mb-2">
-					<div class="btn rounded-circle text-light bg-danger me-2" style="width: 35px; height: 35px">
-						4
-					</div>
-					<div class="text-light">Completed</div>
-				</a>
-				<a class="btn btn-dark d-flex align-items-center mb-2">
-					<div class="btn rounded-circle text-light bg-dark me-2" style="width: 35px; height: 35px">
-						5
-					</div>
-					<div class="text-light">Expired</div>
-				</a>
-			</section>
+			<?php include "includes/Categories_Student.php"?>
 			<section id="allExams" class="row mt-4">
 				<?php while ($row = mysqli_fetch_assoc($query)) : ?>
 					<?php
