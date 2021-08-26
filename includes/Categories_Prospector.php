@@ -1,6 +1,6 @@
 <section id="allCategories" class="d-flex justify-content-between mt-3 tabs">
     <a class="btn btn-light d-flex align-items-center" href="index.php">
-        <div class="btn rounded-circle text-light bg-success me-2" style="width: 35px; height: 35px">
+        <div class="btn rounded-circle text-light bg-primary me-2" style="width: 35px; height: 35px">
             1
         </div>
         <div class="text-light">Department</div>
@@ -16,5 +16,11 @@
             3
         </div>
         <div class="text-light">Class</div>
+    </a>
+    <a class="btn btn-light d-flex align-items-center" href="subject.php">
+        <div class="btn rounded-circle text-light bg-dark me-2" style="width: 35px; height: 35px">
+            4
+        </div>
+        <div class="text-light">Subject</div>
     </a>
 </section>

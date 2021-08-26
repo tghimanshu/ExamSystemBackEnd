@@ -14,21 +14,32 @@ if ((isset($_GET['edit'])) || (isset($_GET['details'])) ) {
 	$editData=mysqli_fetch_assoc($query);
 }
 
+if(isset($_GET['assign'])){
+$isAssign=true;
+}
+
 if(isset($_GET['delete'])){
 	mysqli_query($con,"DELETE FROM `teacher` WHERE id=".$_GET['id']) or die(mysqli_error($con));
 }
-if(isset($_POST['addteacher'])){
+if(isset($_POST['addTeacher'])){
 $name = mysqli_escape_string($con, $_POST['name']);
 $contact = mysqli_escape_string($con, $_POST['contact']);
 $email = mysqli_escape_string($con, $_POST['email']);
 $query=mysqli_query($con,"INSERT into `teacher` VALUES(null,'$name','$email','admin','$contact')");
 }
-if(isset($_POST['editteacher'])){
+if(isset($_POST['editTeacher'])){
 	$name = mysqli_escape_string($con, $_POST['name']);
 	$contact = mysqli_escape_string($con, $_POST['contact']);
 	$email = mysqli_escape_string($con, $_POST['email']);
 	$id=mysqli_escape_string($con,$_POST['id']);
 	$addQuery = mysqli_query($con, "UPDATE `teacher` SET `name` = '$name', `email` = '$email', `contact` = $contact  WHERE id = $id") or die(mysqli_error($con));
+}
+if(isset($_POST['assignTeacher'])){
+	$teacher_id = mysqli_escape_string($con, $_POST['id']);
+	$year = mysqli_escape_string($con, $_POST['year']);
+	$division = mysqli_escape_string($con, $_POST['division']);
+	$department_id = mysqli_escape_string($con, $_POST['department_id']);
+	$addQuery = mysqli_query($con, "INSERT INTO `classes` VALUES (null, '$year', '$division', $department_id, $teacher_id)") or die(mysqli_error($con));
 }
 ?>
 <?php $headerTitle = "Prospector | Teacher" ?>
@@ -116,7 +127,7 @@ if(isset($_POST['editteacher'])){
 									</td>
 									<td>
 										<div class="d-flex justify-content-center">
-											<a href="Teacher.php?assign=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-primary btn-sm">Assign</a>
+											<a href="Teacher.php?assign=true&id=<?php echo $row['id'] ?>&name=<?php echo $row['name']?>" class="ms-2 btn btn-primary btn-sm">Assign</a>
 											<a href="Teacher.php?edit=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-primary btn-sm">Edit</a>
 											<a href="Teacher.php?details=true&id=<?php echo $row['id'] ?>&name=<?php echo $row['name']?>" class="ms-2 btn btn-primary btn-sm">Details</a>
 											<a href="Teacher.php?delete=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-danger btn-sm">Delete</a>
@@ -128,23 +139,37 @@ if(isset($_POST['editteacher'])){
 							<tr>
 								<td colspan="6">
 									<form method="POST" action="Teacher.php" class="d-flex">
-										<?php if (isset($isEditing)) {
+										<?php if (isset($isEditing) || isset($isAssign)) {
 											echo "<input type='hidden' name='id' value='" . $_GET['id'] . "' />";
 										} ?>
 										<div class="me-3">
-											<input name="name" type="text" class="form-control" placeholder="name" aria-label="year" required value="<?php echo isset($isEditing) ? $editData['name'] : '' ?>" />
+											<input name="name" type="text" class="form-control" placeholder="name" aria-label="year" required value="<?php echo isset($isEditing) ? $editData['name'] : (isset($isAssign)? $_GET['name'] :'') ?>" />
 										</div>
 										<div class="me-3">
-											<input name="contact" type="text" class="form-control" placeholder="contact" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['contact'] : '' ?>" />
+											<input name="<?php echo isset($isAssign)? 'year' : 'contact'?>" type="text" class="form-control" placeholder="<?php echo isset($isAssign) ? 'year' : 'contact';?>" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['contact'] : '' ?>" />
 										</div>
 										<div class="me-3">
-											<input name="email" type="text" class="form-control" placeholder="email" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['email'] : '' ?>" />
+											<input name="<?php echo isset($isAssign)? 'division' : 'email'?>" type="text" class="form-control" placeholder="<?php echo isset($isAssign) ? 'division' : 'email';?>"" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['email'] : '' ?>" />
 										</div>
+										<?php if(isset($isAssign)){?>
 										<div class="me-3">
-											<button name="<?php echo isset($isEditing) ? 'Edit Teacher' : 'Add Teacher'; ?>" type="submit" class="btn btn-success">
+                                        <?php $dquery = mysqli_query($con, "SELECT * FROM `departments`;"); ?>
+											<select name="department_id" class="form-control">
+												<?php while ($d = mysqli_fetch_assoc($dquery)) : ?>
+													<option value="<?php echo $d['id'] ?>" ?><?php echo $d['name'] ?></option>
+												<?php endwhile; ?>
+											</select>
+										</div>
+										<?php }?>
+										<div class="me-3">
+											<button name="<?php echo isset($isEditing) ? 'editTeacher' : (isset($isAssign)? 'assignTeacher': 'addTeacher'); ?>" type="submit" class="btn btn-success">
 												<?php if (isset($isEditing)) {
 													echo "Update";
-												} else {
+												}
+												elseif(isset($isAssign)){
+													echo "Assign";
+												}
+												 else {
 													echo "Add";
 												} ?>
 											</button>
