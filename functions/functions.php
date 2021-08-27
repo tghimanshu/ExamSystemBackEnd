@@ -187,8 +187,12 @@ function sendMail($to_email, $subject, $body)
 	$headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 	$headers .= "From: Best Programmers  <himnesh234@gmail.com>";
 	if (mail($to_email, $subject, $body, $headers)) {
-		echo "Email successfully sent to $to_email...";
+		// echo "Email successfully sent to $to_email...";
 	} else {
-		echo "Email sending failed...";
+		echo "Email sending failed to send: $to_email...";
 	}
+}
+
+function sendCredentialsMail($class_id)
+{
 }

@@ -86,6 +86,28 @@ echo "<script>localStorage.removeItem('timeElapsed')</script>";
                             <div id="tracker" class="row"></div>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-body px-md-5">
+                            <div class="color-infos">
+                                <div class="d-flex align-items-center">
+                                    <div id="at-${i}" style="cursor:pointer;width: 20px;height: 20px;" class="anstab mb-1 badge bg-success">&nbsp;</div>
+                                    <p class="text-white m-0 ms-3">Attempted</p>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div id="at-${i}" style="cursor:pointer;width: 20px;height: 20px;" class="anstab mb-1 badge bg-primary">&nbsp;</div>
+                                    <p class="text-white m-0 ms-3">Review</p>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div id="at-${i}" style="cursor:pointer;width: 20px;height: 20px;" class="anstab mb-1 badge bg-info">&nbsp;</div>
+                                    <p class="text-white m-0 ms-3">Attempted and Review</p>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <div id="at-${i}" style="cursor:pointer;width: 20px;height: 20px;" class="anstab mb-1 badge bg-light">&nbsp;</div>
+                                    <p class="text-white m-0 ms-3">Unattempted</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,6 +122,7 @@ echo "<script>localStorage.removeItem('timeElapsed')</script>";
     <!-- SCRIPTS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script src="assets/js/bootstrap.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="assets/js/exam.js"></script>
 </body>
 

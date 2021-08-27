@@ -41,8 +41,12 @@
 
 <?php function studentData($con)
 { ?>
+    <div class="container">
+        <a href="index.php?mail=true" class="btn btn-success">Send Credentials Mail</a>
+    </div>
     <div class="table-responsive mt-5 mx-5">
-        <table class="table table-striped table-hover table-bordered blurred-bg">
+        <table class="table ta:q
+        ble-striped table-hover table-bordered blurred-bg">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -85,7 +89,7 @@
                                 <?php if (isset($studentStatus)) { ?>
                                     <a href="index.php?answerId=<?php echo $studentStatus['id'] ?>" class="btn btn-success btn-sm">View</a>
                                 <?php } else { ?>
-                                    <button href="#" class="btn btn-success btn-sm" disabled>View</button>
+                                    <button class="btn btn-success btn-sm" disabled>View</button>
                                 <?php } ?>
                                 <?php if (isset($studentStatus) && $studentStatus['submitted'] == 1) { ?>
                                     <a href="index.php?resumesid=<?php echo $row['id'] ?>&resumepid=<?php echo $_GET['examId'] ?>" class="ms-2 btn btn-danger btn-sm">Resume Test</a>
