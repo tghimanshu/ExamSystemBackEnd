@@ -4,7 +4,7 @@
 <?php
 
 session_start();
-if (!isset($_SESSION['email'])) {
+if (!isset($_SESSION['username'])) {
     header("Location: login.php");
 }
 $equery = mysqli_query($con, "SELECT * FROM `answers` WHERE student_id = " . $_SESSION['student_id'] . " AND paper_id = " . $_GET['id']);

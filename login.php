@@ -15,7 +15,7 @@ if ((isset($_GET['email']) && $_GET['email'] == "") || (isset($_GET['pass']) && 
 
 <?php
 session_start();
-if (isset($_SESSION['email'])) {
+if (isset($_SESSION['username'])) {
   header("Location: index.php");
 }
 
@@ -27,7 +27,7 @@ if (isset($_POST['submit'])) {
     die(mysqli_error($con));
   } else {
     if (mysqli_num_rows($query) == 1) {
-      $_SESSION['email'] = $email;
+      $_SESSION['username'] = $email;
       $_SESSION['student_id'] = mysqli_fetch_assoc($query)['id'];
       header("Location: index.php");
     } else {
@@ -49,9 +49,9 @@ if (isset($_POST['submit'])) {
             <div class="alert alert-danger"><?php echo $error ?></div>
           <?php } ?>
           <label for="email">Email Address</label>
-          <input type="email" required class="form-control mb-2" id="email" name="email" value="<?php echo isset($_GET['email'])? $_GET['email']:'' ?>" />
+          <input type="email" required class="form-control mb-2" id="email" name="email" value="<?php echo isset($_GET['email']) ? $_GET['email'] : '' ?>" />
           <label for="pwd">Password</label>
-          <input type="password" required class="form-control mb-2" id="pwd" name="pwd" value="<?php echo isset($_GET['pass'])? $_GET['pass']:'' ?>" />
+          <input type="password" required class="form-control mb-2" id="pwd" name="pwd" value="<?php echo isset($_GET['pass']) ? $_GET['pass'] : '' ?>" />
         </div>
         <button type="submit" class="btn btn-success btn-block mt-2" name="submit">Login</button>
       </form>

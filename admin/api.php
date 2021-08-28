@@ -10,6 +10,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Subject</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -23,12 +24,18 @@
                         <td><?php echo ++$srno; ?></td>
                         <td>
                             <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
-                                <?php echo $row['Subject'] ?>
+                                <?php echo $row['name'] ?>
+                            </h5>
+                        </td>
+                        <td>
+                            <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                <?php $subject = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE id = " . $row['subject_id'])); ?>
+                                <?php echo $subject['name'] ?>
                             </h5>
                         </td>
                         <td>
                             <div class="d-flex justify-content-center">
-                                <a href="index.php?examId=<?php echo $row['ID'] ?>" class="btn btn-success btn-sm">View</a>
+                                <a href="index.php?examId=<?php echo $row['id'] ?>" class="btn btn-success btn-sm">View</a>
                             </div>
                         </td>
                     </tr>
@@ -41,8 +48,9 @@
 
 <?php function studentData($con)
 { ?>
-    <div class="container">
+    <div class="container mt-4">
         <a href="index.php?mail=true" class="btn btn-success">Send Credentials Mail</a>
+        <a href="export.php?result=true&examId=<?php echo $_GET['examId']; ?>" class="btn btn-primary">Export Results</a>
     </div>
     <div class="table-responsive mt-5 mx-5">
         <table class="table ta:q
@@ -53,6 +61,7 @@
                     <th>Name</th>
                     <th>Status</th>
                     <th>Actions</th>
+                    <th>Marks</th>
                 </tr>
             </thead>
             <?php
@@ -95,6 +104,22 @@
                                     <a href="index.php?resumesid=<?php echo $row['id'] ?>&resumepid=<?php echo $_GET['examId'] ?>" class="ms-2 btn btn-danger btn-sm">Resume Test</a>
                                 <?php } ?>
                             </div>
+                        </td>
+                        <td>
+                            <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                <?php
+                                $studentId = (int)$row['id'];
+                                $paperId =  (int)$_GET['examId'];
+                                $status = mysqli_query($con, "SELECT * FROM `answers` WHERE `student_id` = $studentId AND `paper_id` = $paperId;") or die(mysqli_error($con));
+                                if (mysqli_num_rows($status) == 1) {
+                                    $studentStatus = mysqli_fetch_assoc($status);
+                                    echo getResult($studentId, $paperId);
+                                } else {
+                                    unset($studentStatus);
+                                    echo "0";
+                                }
+                                ?>
+                            </h5>
                         </td>
                     </tr>
                 <?php endwhile; ?>

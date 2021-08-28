@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "shuchkin/simplexlsx",
-            "version": "0.8.24",
-            "version_normalized": "0.8.24.0",
+            "version": "0.8.26",
+            "version_normalized": "0.8.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shuchkin/simplexlsx.git",
-                "reference": "1581dbed25a846f8fee4303849ab58a14f528518"
+                "reference": "a7232c145a3b700ae2650367d553c1b77081fc5c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shuchkin/simplexlsx/zipball/1581dbed25a846f8fee4303849ab58a14f528518",
-                "reference": "1581dbed25a846f8fee4303849ab58a14f528518",
+                "url": "https://api.github.com/repos/shuchkin/simplexlsx/zipball/a7232c145a3b700ae2650367d553c1b77081fc5c",
+                "reference": "a7232c145a3b700ae2650367d553c1b77081fc5c",
                 "shasum": ""
             },
             "require": {
@@ -20,7 +20,7 @@
                 "ext-simplexml": "*",
                 "ext-zlib": "*"
             },
-            "time": "2021-05-18T11:49:49+00:00",
+            "time": "2021-08-24T06:02:30+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -50,9 +50,63 @@
             ],
             "support": {
                 "issues": "https://github.com/shuchkin/simplexlsx/issues",
-                "source": "https://github.com/shuchkin/simplexlsx/tree/0.8.24"
+                "source": "https://github.com/shuchkin/simplexlsx/tree/0.8.26"
             },
             "install-path": "../shuchkin/simplexlsx"
+        },
+        {
+            "name": "shuchkin/simplexlsxgen",
+            "version": "1.0.20",
+            "version_normalized": "1.0.20.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shuchkin/simplexlsxgen.git",
+                "reference": "7f5c5847724a63c2b9f9f04333e7c2c8ae7d654d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shuchkin/simplexlsxgen/zipball/7f5c5847724a63c2b9f9f04333e7c2c8ae7d654d",
+                "reference": "7f5c5847724a63c2b9f9f04333e7c2c8ae7d654d",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "ext-zlib": "*"
+            },
+            "time": "2021-07-29T06:16:10+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "classmap": [
+                    "src/SimpleXLSXGen.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sergey Shuchkin (SMSPILOT)",
+                    "email": "sergey.shuchkin@gmail.com",
+                    "homepage": "https://shuchkin.ru/"
+                }
+            ],
+            "description": "Export data to Excel XLSx file. PHP XLSX generator.",
+            "homepage": "https://github.com/shuchkin/simplexlsxgen",
+            "keywords": [
+                "backend",
+                "creator",
+                "excel",
+                "generator",
+                "php",
+                "xlsx"
+            ],
+            "support": {
+                "issues": "https://github.com/shuchkin/simplexlsxgen/issues",
+                "source": "https://github.com/shuchkin/simplexlsxgen/tree/1.0.20"
+            },
+            "install-path": "../shuchkin/simplexlsxgen"
         }
     ],
     "dev": true,

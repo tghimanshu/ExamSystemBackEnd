@@ -3,7 +3,7 @@
 <?php require "../vendor/autoload.php" ?>
 <?php
 session_start();
-if (!isset($_SESSION['email'])) {
+if (!isset($_SESSION['username'])) {
 	header("Location: login.php");
 }
 ?>
@@ -22,7 +22,7 @@ if (isset($_POST['psubmit'])) {
 		$email = $value['email'];
 		$phone = $value['phone'];
 		$pass = $value['pass'];
-		mysqli_query($con, "INSERT INTO `student`(`name`, `rollno`, `class`,`division`,`phone`, `email`, `pwd`) VALUES ('$name', $rollno, 'BSCIT', 'A', $phone, '$email','$pass')") or die(mysqli_error($con));
+		mysqli_query($con, "INSERT INTO `student`(`name`, `rollno`, `class`,`phone`, `email`, `pwd`) VALUES ('$name', $rollno, 'BSCIT', $phone, '$email','$pass')") or die(mysqli_error($con));
 		sendMail($email, "SARAF COLLEGE - ACCOUNT CREDENTIALS", "
 		<h1><center>Saraf College presents</center></h1>
 		<h4>Your account credentials for your upcoming examination</h4>

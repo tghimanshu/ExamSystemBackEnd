@@ -1,10 +1,10 @@
 <?php require "db/db.php" ?>
-<?php require "functions/functions.php" ?>
 <?php require "vendor/autoload.php" ?>
+<?php require "functions/functions.php" ?>
 <?php
 
 session_start();
-if (!isset($_SESSION['email'])) {
+if (!isset($_SESSION['username'])) {
 	header("Location: login.php");
 }
 
@@ -27,9 +27,9 @@ $query = mysqli_query($con, "SELECT * FROM exampaper");
 <body>
 
 	<div class="app">
-		<?php include "includes/navbar-Prospector_Student.php"?>
+		<?php include "includes/navbar-Prospector_Student.php" ?>
 		<div class="container">
-			<?php include "includes/Categories_Student.php"?>
+			<?php include "includes/Categories_Student.php" ?>
 			<section id="allExams" class="row mt-4">
 				<?php while ($row = mysqli_fetch_assoc($query)) : ?>
 					<?php

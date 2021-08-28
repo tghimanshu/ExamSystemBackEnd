@@ -193,6 +193,41 @@ function sendMail($to_email, $subject, $body)
 	}
 }
 
-function sendCredentialsMail($class_id)
+function getResult($student_id, $paper_id)
 {
+	global $con;
+	// For Student's Answer
+	$query = mysqli_query($con, "SELECT * FROM `answers` WHERE `student_id` = $student_id AND `paper_id` = $paper_id;");
+	$data = mysqli_fetch_assoc($query);
+	$answers = json_decode(urldecode($data['answers']));
+	// For Real Answers
+	$query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = $paper_id;");
+	$paperData = mysqli_fetch_assoc($query);
+	$a = json_decode(urldecode($paperData['answers']), true);
+	// Calculation of marks
+	$marks = 0;
+	foreach ($answers as $key => $answer) {
+		if ($a[$answer->qId]['answer'] == $answer->answer) {
+			$marks++;
+		}
+	}
+	return $marks;
 }
+
+// function generateResult()
+// {
+// 	$data = [
+// 		['Integer', 123],
+// 		['Float', 12.35],
+// 		['Percent', '12%'],
+// 		['Datetime', '2020-05-20 02:38:00'],
+// 		['Date', '2020-05-20'],
+// 		['Time', '02:38:00'],
+// 		['Datetime PHP', new DateTime('2021-02-06 21:07:00')],
+// 		['String', 'Long UTF-8 String in autoresized column'],
+// 		['Hyperlink', 'https://github.com/shuchkin/simplexlsxgen'],
+// 		['Hyperlink + Anchor', '<a href="https://github.com/shuchkin/simplexlsxgen">SimpleXLSXGen</a>'],
+// 		['RAW string', "\0" . '2020-10-04 16:02:00']
+// 	];
+// SimpleXLSXGen::fromArray($data)->saveAs('datatypes.xlsx') or die("eror");
+// }
