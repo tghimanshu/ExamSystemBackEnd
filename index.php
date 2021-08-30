@@ -41,7 +41,9 @@ $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` IN (SE
 							<div class="card-header bg-primary">
 								<h4 class="text-center text-light">
 									<?php $subject = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE `id` = " . $row['subject_id'])) ?>
-									<?php echo $row['name'] . ' | ' . $subject['name'] ?>
+									<?php echo $row['exam_type'] == 1 ? "Regular - " : ($row['exam_type'] == 2 ? "ATKT - " : "Mock - "); ?>
+									<?php echo $row['exam_type'] == 3 ? $row['name'] : ($row['name'] == '1' ? "Internal" : "External"); ?>
+									<?php echo ' | ' . $subject['name'] ?>
 								</h4>
 							</div>
 							<div class="card-body">
@@ -51,14 +53,24 @@ $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` IN (SE
 								$end = date('H:i:s', strtotime($row['endTime']));
 								$currTime = new DateTime($timezone = "Asia/Kolkata");
 								$startTime = new DateTime($row['date'], new DateTimeZone("Asia/Kolkata"));
+								$endTime = new DateTime($row['endTime'], new DateTimeZone("Asia/Kolkata"));
 								$startTimeLeft = $currTime->diff($startTime);
+								$endTimeLeft = $currTime->diff($endTime);
 								?>
 								<h6>Start: <?php echo $date1 ?></h6>
 								<h6>Time: <?php echo $time ?></h6>
+								<h6>TimeLeft : <?php echo $startTimeLeft->invert ?></h6>
+								<h6>TimeLeftEND : <?php echo $endTimeLeft->invert ?></h6>
 								<h6>Expired: <?php echo $end ?></h6>
 								<h6>No of Questions: <?php print_r(count(json_decode(urldecode($row['Questions'])))) ?></h6>
 								<hr />
-								<a href="exam.php?id=<?php echo $row['id'] ?>" class="btn btn-primary d-block mx-auto <?php echo $startTimeLeft->invert == '0' || $examData['submitted'] == '1' ? "disabled" : "" ?>">
+								<a href="exam.php?id=<?php echo $row['id'] ?>" class="btn btn-primary d-block mx-auto <?php
+																														echo $endTimeLeft->invert == '1' && $examData['submitted'] == '0' ? "" : ($startTimeLeft->invert == '0' ||
+																															$endTimeLeft->invert == '1' ||
+																															$examData['submitted'] == '1'
+																															? "disabled"
+																															: "");
+																														?>">
 									<?php
 									echo isset($examData) ? ($examData['submitted'] == '1' ? "Completed" : "Resume") : "Start"
 									?>

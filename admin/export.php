@@ -13,6 +13,9 @@ $filename = "results";         //File Name
 
 //execute query 
 $result = mysqli_query($con, "SELECT * FROM `answers` WHERE `paper_id` = $examId;") or die("Couldn't execute query:<br>");
+$pquery = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `id` = $examId;");
+$paper = mysqli_fetch_assoc($pquery);
+$filename = $paper['name'] . " - " . mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE `id` = " . $paper['subject_id']))['name'];
 $file_ending = "csv";
 
 

@@ -15,9 +15,8 @@ if (!isset($_SESSION['username'])) {
 <?php $cssFiles = "<link rel='stylesheet' href='../assets/css/student_profile.css'/>" ?>
 <?php include "../includes/header.php" ?>
 <div class="app">
-    <?php include "../includes/navbar-Prospector_Student.php" ?>
+    <?php include "../includes/navbar-admin.php" ?>
     <div class="container">
-        <?php include "../includes/Categories_Prospector.php" ?>
         <section id="allDepartment">
             <!-- Bascially there will be two loop first loop will take all the streams and second one take all teacher  from iterated stream loop -->
             <?php

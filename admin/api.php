@@ -26,25 +26,44 @@ if (!isset($_SESSION['username'])) {
             ?>
             <tbody>
                 <?php while ($row = mysqli_fetch_assoc($query)) : ?>
-                    <tr>
-                        <td><?php echo ++$srno; ?></td>
-                        <td>
-                            <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
-                                <?php echo $row['name'] ?>
-                            </h5>
-                        </td>
-                        <td>
-                            <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
-                                <?php $subject = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE id = " . $row['subject_id'])); ?>
-                                <?php echo $subject['name'] ?>
-                            </h5>
-                        </td>
-                        <td>
-                            <div class="d-flex justify-content-center">
-                                <a href="index.php?examId=<?php echo $row['id'] ?>" class="btn btn-success btn-sm">View</a>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php
+                    $currTime = new DateTime($timezone = "Asia/Kolkata");
+                    $startTime = new DateTime($row['date'], new DateTimeZone("Asia/Kolkata"));
+                    $endTime = new DateTime($row['endTime'], new DateTimeZone("Asia/Kolkata"));
+                    $startTimeLeft = $currTime->diff($startTime);
+                    $endTimeLeft = $currTime->diff($endTime);
+                    ?>
+                    <?php
+                    if (
+                        (($startTimeLeft->format("%i") < 29 && $startTimeLeft->invert == '0') || $startTimeLeft->invert == '1') &&
+                        (($endTimeLeft->format('%i') < 29 && $endTimeLeft->invert == '1') || $endTimeLeft->invert == '0')
+                    ) {
+                    ?>
+
+                        <tr>
+                            <td>
+                                <?php echo ++$srno; ?>
+                            </td>
+                            <td>
+                                <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                    <?php echo $row['exam_type'] == 1 ? "Regular - " : ($row['exam_type'] == 2 ? "ATKT - " : "Mock - "); ?>
+                                    <?php echo $row['exam_type'] == 3 ? $row['name'] : ($row['name'] == '1' ? "Internal" : "External"); ?>
+                                </h5>
+                            </td>
+                            <td>
+                                <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                    <?php $subject = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE id = " . $row['subject_id'])); ?>
+                                    <?php echo $subject['name'] ?>
+                                </h5>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <a href="index.php?examId=<?php echo $row['id'] ?>" class="btn btn-success btn-sm">View</a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php }
+                    ?>
                 <?php endwhile; ?>
             </tbody>
         </table>

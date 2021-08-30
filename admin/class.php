@@ -28,17 +28,15 @@ if (isset($_GET['edit'])) {
 
 if (isset($_POST['addclass'])) {
     $year = mysqli_escape_string($con, $_POST['year']);
-    $division = mysqli_escape_string($con, $_POST['division']);
     $department_id = mysqli_escape_string($con, $_SESSION['department_id']);
-    $addQuery = mysqli_query($con, "INSERT INTO `classes` VALUES (null, '$year', '$division', $department_id)") or die(mysqli_error($con));
+    $addQuery = mysqli_query($con, "INSERT INTO `classes` VALUES (null, '$year', $department_id)") or die(mysqli_error($con));
     $successMessage = "Added Department SucessFully!!";
 }
 if (isset($_POST['editclass'])) {
     $id = mysqli_escape_string($con, $_POST['id']);
     $year = mysqli_escape_string($con, $_POST['year']);
-    $division = mysqli_escape_string($con, $_POST['division']);
     $department_id = mysqli_escape_string($con, $_SESSION['department_id']);
-    $addQuery = mysqli_query($con, "UPDATE `classes` SET `year` = '$year', `division` = '$division', `department_id` = $department_id WHERE id = $id") or die(mysqli_error($con));
+    $addQuery = mysqli_query($con, "UPDATE `classes` SET `year` = '$year', `department_id` = $department_id WHERE id = $id") or die(mysqli_error($con));
     $successMessage = "Updated Department SucessFully!!";
 }
 
@@ -62,16 +60,19 @@ if (isset($_GET['subjectedit'])) {
 }
 
 if (isset($_POST['addsubject'])) {
+    $sem = mysqli_escape_string($con, $_POST['sem']);
     $name = mysqli_escape_string($con, $_POST['name']);
-    $id = mysqli_escape_string($con, $_POST['id']);
-    $addQuery = mysqli_query($con, "INSERT INTO `subject` VALUES (null, '$name', '$id')") or die(mysqli_error($con));
-    header("Location: class.php?class_id=" . $id);
+    $class_id = mysqli_escape_string($con, $_POST['class_id']);
+    $addQuery = mysqli_query($con, "INSERT INTO `subject` VALUES (null, $sem, '$name', '$class_id')") or die(mysqli_error($con));
+    header("Location: class.php?class_id=" . $class_id);
 }
 if (isset($_POST['editsubject'])) {
     $id = mysqli_escape_string($con, $_POST['id']);
+    $class_id = mysqli_escape_string($con, $_POST['class_id']);
     $name = mysqli_escape_string($con, $_POST['name']);
-    $addQuery = mysqli_query($con, "UPDATE `subject` SET `name` = '$name' WHERE id = $id") or die(mysqli_error($con));
-    header("Location: class.php?class_id=" . $id);
+    $sem = mysqli_escape_string($con, $_POST['sem']);
+    $addQuery = mysqli_query($con, "UPDATE `subject` SET `sem` = $sem, `name` = '$name' WHERE id = $id") or die(mysqli_error($con));
+    header("Location: class.php?class_id=" . $class_id);
 }
 
 ?>
@@ -80,10 +81,10 @@ if (isset($_POST['editsubject'])) {
 <?php $cssFiles = "<link rel='stylesheet' href='../assets/css/student_profile.css'/>" ?>
 <?php include "../includes/header.php" ?>
 <div class="app">
-    <?php include "../includes/navbar-Prospector_Student.php" ?>
+    <?php include "../includes/navbar-admin.php" ?>
     <?php if (isset($_GET['class_id'])) : ?>
         <div class="container">
-            <?php include "../includes/Categories_Prospector.php" ?>
+            <!-- <?php include "../includes/Categories_Prospector.php" ?> -->
             <section id="allDepartment">
                 <!-- Bascially there will be two loop first loop will take all the streams and second one take all teacher  from iterated stream loop -->
                 <?php
@@ -96,6 +97,7 @@ if (isset($_POST['editsubject'])) {
                         <thead>
                             <tr>
                                 <th>Sr.No</th>
+                                <th>Semester</th>
                                 <th>Subject Name</th>
                                 <th>Actions</th>
                             </tr>
@@ -108,6 +110,9 @@ if (isset($_POST['editsubject'])) {
                             <?php while ($row = mysqli_fetch_assoc($query)) : ?>
                                 <tr>
                                     <td><?php echo ++$srno; ?></td>
+                                    <td>
+                                        <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">SEM <?php echo $row['sem']; ?></h5>
+                                    </td>
                                     <td>
                                         <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['name']; ?></h5>
                                     </td>
@@ -124,7 +129,24 @@ if (isset($_POST['editsubject'])) {
                             <tr>
                                 <td colspan="4">
                                     <form method="POST" action="class.php" class="d-flex">
-                                        <input type='hidden' name='id' value="<?php echo $_GET['class_id'] ?> " />
+                                        <input type='hidden' name='class_id' value="<?php echo $_GET['class_id'] ?> " />
+                                        <input type='hidden' name='id' value="<?php echo isset($_GET['id']) ? $_GET['id'] : "" ?> " />
+                                        <div class="me-3">
+                                            <select name="sem" id="sem" class="form-control">
+                                                <?php $class = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `classes` WHERE `id` = " . $_GET['class_id'])); ?>
+                                                <?php if ($class['year'] == "FY") : ?>
+                                                    <option value="1" <?php echo isset($isEditing) && $subjectEditData['sem'] ==  1 ? 'selected' : '' ?>>SEM 1</option>
+                                                    <option value="2" <?php echo isset($isEditing) && $subjectEditData['sem'] ==  2 ? 'selected' : '' ?>>SEM 2</option>
+                                                <?php elseif ($class['year'] == "SY") : ?>
+                                                    <option value="3" <?php echo isset($isEditing) && $subjectEditData['sem'] ==  3 ? 'selected' : '' ?>>SEM 3</option>
+                                                    <option value="4" <?php echo isset($isEditing) && $subjectEditData['sem'] ==  4 ? 'selected' : '' ?>>SEM 4</option>
+                                                <?php elseif ($class['year'] == "TY") : ?>
+                                                    <option value="5" <?php echo isset($isEditing) && $subjectEditData['sem'] ==  5 ? 'selected' : '' ?>>SEM 5</option>
+                                                    <option value="6" <?php echo isset($isEditing) && $subjectEditData['sem'] ==  6 ? 'selected' : '' ?>>SEM 6</option>
+                                                <?php endif; ?>
+
+                                            </select>
+                                        </div>
                                         <div class="me-3">
                                             <input name="name" type="text" class="form-control" placeholder="Name" aria-label="Name" required value="<?php echo isset($isEditing) ? $subjectEditData['name'] : '' ?>" />
                                         </div>
@@ -147,7 +169,7 @@ if (isset($_POST['editsubject'])) {
         </div>
     <?php else : ?>
         <div class="container">
-            <?php include "../includes/Categories_Prospector.php" ?>
+            <!-- <?php include "../includes/Categories_Prospector.php" ?> -->
             <section id="allDepartment">
                 <!-- Bascially there will be two loop first loop will take all the streams and second one take all teacher  from iterated stream loop -->
                 <?php
@@ -161,7 +183,6 @@ if (isset($_POST['editsubject'])) {
                             <tr>
                                 <th>Sr.No</th>
                                 <th>Year</th>
-                                <th>Division</th>
                                 <th>Department</th>
                                 <th>Actions</th>
                             </tr>
@@ -176,9 +197,6 @@ if (isset($_POST['editsubject'])) {
                                     <td><?php echo ++$srno; ?></td>
                                     <td>
                                         <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['year']; ?></h5>
-                                    </td>
-                                    <td>
-                                        <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['division']; ?></h5>
                                     </td>
                                     <td>
                                         <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
@@ -207,10 +225,11 @@ if (isset($_POST['editsubject'])) {
                                             echo "<input type='hidden' name='id' value='" . $_GET['id'] . "' />";
                                         } ?>
                                         <div class="me-3">
-                                            <input name="year" type="text" class="form-control" placeholder="Year" aria-label="year" required value="<?php echo isset($isEditing) ? $editData['year'] : '' ?>" />
-                                        </div>
-                                        <div class="me-3">
-                                            <input name="division" type="text" class="form-control" placeholder="division" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['division'] : '' ?>" />
+                                            <select name="year" class="form-control">
+                                                <option value="FY" <?php echo isset($isEditing) && $editData['year'] == "FY" ? "selected" : '' ?>>FY</option>
+                                                <option value="SY" <?php echo isset($isEditing) && $editData['year'] == "SY" ? "selected" : '' ?>>SY</option>
+                                                <option value="TY" <?php echo isset($isEditing) && $editData['year'] == "TY" ? "selected" : '' ?>>TY</option>
+                                            </select>
                                         </div>
                                         <div class="me-3">
                                             <button name="<?php echo isset($isEditing) ? 'editclass' : 'addclass'; ?>" type="submit" class="btn btn-success">

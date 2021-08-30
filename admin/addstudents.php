@@ -14,6 +14,7 @@ if (isset($_GET['delete'])) {
 	while ($data = mysqli_fetch_assoc($query)) {
 		mysqli_query($con, "DELETE FROM `student` WHERE id = " . $data['id']);
 	}
+	header("Location: student.php?class_id=" . $_GET['class_id']);
 }
 
 ?>
@@ -44,6 +45,7 @@ if (isset($_POST['psubmit'])) {
 		// <br />
 		// ");
 	}
+	header("Location: student.php?class_id=" . $_POST['class_id']);
 }
 
 ?>
@@ -54,7 +56,15 @@ if (isset($_POST['psubmit'])) {
 	<div class="container blurred-bg" style="border-radius: 10px">
 		<h1 class="text-center text-light mt-5">Add New Students</h1>
 		<form action="addstudents.php" method="POST" enctype="multipart/form-data">
-			<input type="hidden" name="class_id" value="<?php echo $_GET['class_id'] ?>" />
+			<div class="input-group mb-2 <?php echo isset($_GET['class_id']) ? 'd-none' : "" ?>">
+				<label for="pclass" class="input-group-text">subject</label>
+				<?php $dquery = mysqli_query($con, "SELECT * FROM `classes` WHERE `department_id` = " . $_SESSION['department_id']); ?>
+				<select name="class_id" class="form-control">
+					<?php while ($d = mysqli_fetch_assoc($dquery)) : ?>
+						<option value="<?php echo $d['id'] ?>" <?php echo isset($_GET['class_id']) && $_GET['class_id'] == $d['id'] ? "selected" : "" ?>><?php echo $d['year'] ?></option>
+					<?php endwhile; ?>
+				</select>
+			</div>
 			<label>Upload Excel Sheet</label>
 			<input required type="file" id="pfile" class="form-control mb-3" name="pfile" />
 			<button type="submit" class="btn btn-success mb-3" name="psubmit">Add Students</button>
