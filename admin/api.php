@@ -1,6 +1,12 @@
 <?php require "../db/db.php" ?>
 <?php require "../functions/functions.php" ?>
 <?php require "../vendor/autoload.php" ?>
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+}
+?>
 
 <?php function examPapers($con)
 { ?>
@@ -15,7 +21,7 @@
                 </tr>
             </thead>
             <?php
-            $query = mysqli_query($con, "SELECT * FROM `exampaper`");
+            $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` IN (SELECT id FROM `subject` WHERE `class_id` IN (SELECT id FROM `classes` WHERE department_id IN (SELECT id FROM `departments` WHERE id = " . $_SESSION['department_id'] . ")));");
             $srno = 0;
             ?>
             <tbody>
@@ -65,10 +71,13 @@
                 </tr>
             </thead>
             <?php
-            $query = mysqli_query($con, "SELECT * FROM `student`");
+            // $query = mysqli_query($con, "SELECT * FROM `student`");
+            $query = mysqli_query($con, "SELECT * FROM student WHERE class_id IN (SELECT class_id from subject WHERE id in (SELECT subject_id from exampaper where id = " . $_GET['examId'] . "))");
             $srno = 0;
             ?>
             <tbody>
+                <div class="text-white">
+                </div>
                 <?php while ($row = mysqli_fetch_assoc($query)) : ?>
                     <tr>
                         <td><?php echo ++$srno; ?></td>
@@ -86,6 +95,15 @@
                                 if (mysqli_num_rows($status) == 1) {
                                     $studentStatus = mysqli_fetch_assoc($status);
                                     echo $studentStatus['submitted'] == 1 ? "Completed" : "Attempting";
+                                    if ($studentStatus['submitted'] != 1) {
+                                        if (isset($_SESSION['student_' . $srno])) {
+                                            if ($_SESSION['student_' . $srno] == $studentStatus['timeElapsed']) {
+                                                echo " (Paused)";
+                                                $paused = true;
+                                            }
+                                        }
+                                        $_SESSION['student_' . $srno] = $studentStatus['timeElapsed'];
+                                    }
                                 } else {
                                     unset($studentStatus);
                                     echo "Not Yet Started";
@@ -102,6 +120,9 @@
                                 <?php } ?>
                                 <?php if (isset($studentStatus) && $studentStatus['submitted'] == 1) { ?>
                                     <a href="index.php?resumesid=<?php echo $row['id'] ?>&resumepid=<?php echo $_GET['examId'] ?>" class="ms-2 btn btn-danger btn-sm">Resume Test</a>
+                                <?php } ?>
+                                <?php if (isset($studentStatus) && isset($paused) && $row['isLoggedIn'] == 1) { ?>
+                                    <a href="index.php?allowLoginId=<?php echo $row['id'] ?>&pid=<?php echo $_GET['examId'] ?>" class="ms-2 btn btn-sm btn-danger">Allow Login</a>
                                 <?php } ?>
                             </div>
                         </td>

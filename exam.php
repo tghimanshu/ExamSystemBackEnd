@@ -7,11 +7,13 @@ session_start();
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
 }
+// checks if exists
 $equery = mysqli_query($con, "SELECT * FROM `answers` WHERE student_id = " . $_SESSION['student_id'] . " AND paper_id = " . $_GET['id']);
+// creates if it doesn't exist
 if (mysqli_num_rows($equery) !== 1) {
-    mysqli_query($con, "INSERT INTO `answers` VALUES (null, " . $_SESSION['student_id'] . ", " . $_GET['id'] . ", '', '','0', '')");
+    mysqli_query($con, "INSERT INTO `answers` VALUES (null, " . $_SESSION['student_id'] . ", " . $_GET['id'] . ", '', '','0', 0, '')");
 }
-
+// selects
 $tquery = mysqli_query($con, "SELECT * FROM `answers` WHERE student_id = " . $_SESSION['student_id'] . " AND paper_id = " . $_GET['id']);
 $myCurrPaper = mysqli_fetch_assoc($tquery);
 if ($myCurrPaper['submitted'] === '1') {

@@ -49,7 +49,20 @@ if (isset($_GET['examId'])) {
 if (isset($_GET['resumesid'])) {
   $sid = $_GET['resumesid'];
   $pid = $_GET['resumepid'];
-  $resumetestquery = mysqli_query($con, "UPDATE `answers` SET `submitted` = 0 WHERE `student_id` = $sid AND `paper_id` = $pid;") or die(mysqli_error($con));
+  $resumetestquery = mysqli_query($con, "UPDATE `answers` SET `submitted` = 0, `attempts` = 0 WHERE `student_id` = $sid AND `paper_id` = $pid;") or die(mysqli_error($con));
+  if ($resumetestquery) {
+    header("Location: index.php?examId=$pid");
+  }
+}
+
+?>
+
+<?php
+
+if (isset($_GET['allowLoginId'])) {
+  $pid = $_GET['pid'];
+  $allowLoginId = $_GET['allowLoginId'];
+  $resumetestquery = mysqli_query($con, "UPDATE `student` SET `isLoggedIn` = 0 WHERE `id` = $allowLoginId;") or die(mysqli_error($con));
   if ($resumetestquery) {
     header("Location: index.php?examId=$pid");
   }

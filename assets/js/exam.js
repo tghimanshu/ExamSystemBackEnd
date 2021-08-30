@@ -1,6 +1,5 @@
 function getFiftyId(qlen) {
   const attemptableq = [];
-
   while (attemptableq.length < 50) {
     let a = Math.floor(Math.random() * qlen);
     if (!attemptableq.includes(a)) {
@@ -18,9 +17,56 @@ $(document).ready(function () {
       window.outerHeight === window.screen.availHeight &&
       window.outerWidth === window.screen.availWidth
     ) {
-      superErrorContainer.html("");
+      // superErrorContainer.html("");
     } else {
-      superErrorContainer.html("<div id='superError'></div>");
+      // superErrorContainer.html("<div id='superError'></div>");
+      $.post(
+        "answer_update.php",
+        {
+          type: "get_attempt",
+          studentId: student_id,
+          paperId: paper_id,
+        },
+        function (data, status, xhr) {
+          console.log("data; " + data);
+          Swal.fire({
+            icon: "",
+            title: `Attempts Used ${parseInt(data) + 1}/5`,
+            text: "Your tried resizing the tab",
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            preConfirm: (login) => {
+              $.post(
+                "answer_update.php",
+                {
+                  type: "deduct_attempt",
+                  studentId: student_id,
+                  paperId: paper_id,
+                },
+                function (data, status, xhr) {
+                  if (parseInt(data) > 4) {
+                    $.post(
+                      "answer_update.php",
+                      {
+                        type: "submit_exam",
+                        studentId: student_id,
+                        paperId: paper_id,
+                      },
+                      function (data, status, xhr) {
+                        localStorage.removeItem("timeElapsed");
+                        $(window).off("unload");
+                        $(window).off("beforeunload");
+                        window.location = "index.php";
+                      }
+                    );
+                    localStorage.removeItem("timeElapsed");
+                  }
+                }
+              );
+            },
+          });
+        }
+      );
     }
   }
 
@@ -28,7 +74,54 @@ $(document).ready(function () {
   window.addEventListener("resize", resizeevent);
 
   $(window).blur(function () {
-    superErrorContainer.html("<div id='superError'></div>");
+    // superErrorContainer.html("<div id='superError'></div>");
+    $.post(
+      "answer_update.php",
+      {
+        type: "get_attempt",
+        studentId: student_id,
+        paperId: paper_id,
+      },
+      function (data, status, xhr) {
+        console.log("data; " + data);
+        Swal.fire({
+          icon: "",
+          title: `Attempts Used ${parseInt(data) + 1}/5`,
+          text: "Your tried leaving the tab",
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          preConfirm: (login) => {
+            $.post(
+              "answer_update.php",
+              {
+                type: "deduct_attempt",
+                studentId: student_id,
+                paperId: paper_id,
+              },
+              function (data, status, xhr) {
+                if (parseInt(data) > 4) {
+                  $.post(
+                    "answer_update.php",
+                    {
+                      type: "submit_exam",
+                      studentId: student_id,
+                      paperId: paper_id,
+                    },
+                    function (data, status, xhr) {
+                      localStorage.removeItem("timeElapsed");
+                      $(window).off("unload");
+                      $(window).off("beforeunload");
+                      window.location = "index.php";
+                    }
+                  );
+                  localStorage.removeItem("timeElapsed");
+                }
+              }
+            );
+          },
+        });
+      }
+    );
   });
 
   $("body").on("contextmenu", function (e) {
@@ -51,6 +144,25 @@ $(document).ready(function () {
   // END OF CHECKING FOR KAANDS
   let student_id = $("#student_id").text();
   let paper_id = $("#paper_id").text();
+  $(window).on("beforeunload", function () {
+    return "Are you sure want to LOGOUT the session ?";
+  });
+
+  $(window).on("unload", function () {
+    $.post(
+      "answer_update.php",
+      {
+        type: "submit_exam",
+        studentId: student_id,
+        paperId: paper_id,
+      },
+      function (data, status, xhr) {
+        localStorage.removeItem("timeElapsed");
+        window.location = "index.php";
+      }
+    );
+    localStorage.removeItem("timeElapsed");
+  });
   let dbAnswers =
     $("#answers").text() === ""
       ? Array()

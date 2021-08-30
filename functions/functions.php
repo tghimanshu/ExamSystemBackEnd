@@ -206,9 +206,11 @@ function getResult($student_id, $paper_id)
 	$a = json_decode(urldecode($paperData['answers']), true);
 	// Calculation of marks
 	$marks = 0;
-	foreach ($answers as $key => $answer) {
-		if ($a[$answer->qId]['answer'] == $answer->answer) {
-			$marks++;
+	if ($answers) {
+		foreach ($answers as $key => $answer) {
+			if ($a[$answer->qId]['answer'] == $answer->answer) {
+				$marks++;
+			}
 		}
 	}
 	return $marks;

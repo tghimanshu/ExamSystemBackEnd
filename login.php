@@ -27,9 +27,16 @@ if (isset($_POST['submit'])) {
     die(mysqli_error($con));
   } else {
     if (mysqli_num_rows($query) == 1) {
-      $_SESSION['username'] = $email;
-      $_SESSION['student_id'] = mysqli_fetch_assoc($query)['id'];
-      header("Location: index.php");
+      $student = mysqli_fetch_assoc($query);
+      if ($student['isLoggedIn'] != 1) {
+        $_SESSION['username'] = $email;
+        $_SESSION['student_id'] = $student['id'];
+        $_SESSION['class_id'] = $student['class_id'];
+        mysqli_query($con, "UPDATE `student` SET `isLoggedIn` = 1 WHERE id = " . $student['id']);
+        header("Location: index.php");
+      } else {
+        $error = "You are already Logged In from another device";
+      }
     } else {
       $error = "Invalid Email or Password!";
     }

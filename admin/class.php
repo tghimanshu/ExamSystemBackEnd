@@ -193,6 +193,7 @@ if (isset($_POST['editsubject'])) {
                                         <div class="d-flex justify-content-center">
                                             <a href="class.php?edit=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-primary btn-sm">Edit</a>
                                             <a href="class.php?class_id=<?php echo $row['id'] ?>" class="ms-2 btn btn-info btn-sm">View</a>
+                                            <a href="student.php?class_id=<?php echo $row['id'] ?>" class="ms-2 btn btn-warning btn-sm">Students</a>
                                             <a href="class.php?delete=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-danger btn-sm">Remove</a>
                                         </div>
                                     </td>
