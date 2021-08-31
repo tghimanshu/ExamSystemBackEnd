@@ -124,7 +124,8 @@ if (isset($_GET['allowLoginId'])) {
                             </td>
                             <td>
                                 <div class="d-flex justify-content-center">
-                                    <a href="index.php?examId=<?php echo $row['id'] ?>" class="btn btn-success btn-sm">View</a>
+                                    <a href="export.php?result=true&examId=<?php echo $row['id']; ?>" class="btn btn-primary btn-sm">Results</a>
+                                    <a href="index.php?examId=<?php echo $row['id'] ?>" class="ms-2 btn btn-success btn-sm">View</a>
                                 </div>
                             </td>
                         </tr>

@@ -198,22 +198,26 @@ function getResult($student_id, $paper_id)
 	global $con;
 	// For Student's Answer
 	$query = mysqli_query($con, "SELECT * FROM `answers` WHERE `student_id` = $student_id AND `paper_id` = $paper_id;");
-	$data = mysqli_fetch_assoc($query);
-	$answers = json_decode(urldecode($data['answers']));
-	// For Real Answers
-	$query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = $paper_id;");
-	$paperData = mysqli_fetch_assoc($query);
-	$a = json_decode(urldecode($paperData['answers']), true);
-	// Calculation of marks
-	$marks = 0;
-	if ($answers) {
-		foreach ($answers as $key => $answer) {
-			if ($a[$answer->qId]['answer'] == $answer->answer) {
-				$marks++;
+	if (mysqli_num_rows($query) != 0) {
+		$data = mysqli_fetch_assoc($query);
+		$answers = json_decode(urldecode($data['answers']));
+		// For Real Answers
+		$query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = $paper_id;");
+		$paperData = mysqli_fetch_assoc($query);
+		$a = json_decode(urldecode($paperData['answers']), true);
+		// Calculation of marks
+		$marks = 0;
+		if ($answers) {
+			foreach ($answers as $key => $answer) {
+				if ($a[$answer->qId]['answer'] == $answer->answer) {
+					$marks++;
+				}
 			}
 		}
+		return $marks;
+	} else {
+		return 'NA';
 	}
-	return $marks;
 }
 
 // function generateResult()
