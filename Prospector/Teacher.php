@@ -90,97 +90,108 @@ if(isset($_POST['assignTeacher'])){
 				endwhile; //outermost while end?>
 			</section>
 		<?php else:?>
-			<section id="allTeacher">
-				<!-- Bascially there will be two loop first loop will take all the streams and second one take all teacher  from iterated stream loop -->
-				<div class="table-responsive mt-5 mx-5">
-					<table class="table table-striped table-hover table-bordered blurred-bg">
-						<caption style="caption-side: top;">BSCIT</caption>
-						<thead>
-							<tr>
-								<th>ID</th>
-								<th>Name</th>
-								<th>Contact</th>
-								<th>email</th>
-								<th>password</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							<?php
-							$query = mysqli_query($con, "SELECT * FROM `teacher`");
-							$srno = 0;
-							while ($row = mysqli_fetch_assoc($query)) :
-							?>
-								<tr>
-									<td><?php echo ++$srno ?></td>
-									<td>
-										<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['name'] ?></h5>
-									</td>
-									<td>
-										<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['contact'] ?></h5>
-									</td>
-									<td>
-										<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['email'] ?></h5>
-									</td>
-									<td>
-										<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['password'] ?></h5>
-									</td>
-									<td>
-										<div class="d-flex justify-content-center">
-											<a href="Teacher.php?assign=true&id=<?php echo $row['id'] ?>&name=<?php echo $row['name']?>" class="ms-2 btn btn-primary btn-sm">Assign</a>
-											<a href="Teacher.php?edit=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-primary btn-sm">Edit</a>
-											<a href="Teacher.php?details=true&id=<?php echo $row['id'] ?>&name=<?php echo $row['name']?>" class="ms-2 btn btn-primary btn-sm">Details</a>
-											<a href="Teacher.php?delete=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-danger btn-sm">Delete</a>
-										</div>
-									</td>
-								</tr>
-							<?php endwhile; ?>
-							<!-- this like comes at the end of the loop -->
-							<tr>
-								<td colspan="6">
-									<form method="POST" action="Teacher.php" class="d-flex">
-										<?php if (isset($isEditing) || isset($isAssign)) {
-											echo "<input type='hidden' name='id' value='" . $_GET['id'] . "' />";
-										} ?>
-										<div class="me-3">
-											<input name="name" type="text" class="form-control" placeholder="name" aria-label="year" required value="<?php echo isset($isEditing) ? $editData['name'] : (isset($isAssign)? $_GET['name'] :'') ?>" />
-										</div>
-										<div class="me-3">
-											<input name="<?php echo isset($isAssign)? 'year' : 'contact'?>" type="text" class="form-control" placeholder="<?php echo isset($isAssign) ? 'year' : 'contact';?>" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['contact'] : '' ?>" />
-										</div>
-										<div class="me-3">
-											<input name="<?php echo isset($isAssign)? 'division' : 'email'?>" type="text" class="form-control" placeholder="<?php echo isset($isAssign) ? 'division' : 'email';?>"" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['email'] : '' ?>" />
-										</div>
-										<?php if(isset($isAssign)){?>
-										<div class="me-3">
-                                        <?php $dquery = mysqli_query($con, "SELECT * FROM `departments`;"); ?>
-											<select name="department_id" class="form-control">
-												<?php while ($d = mysqli_fetch_assoc($dquery)) : ?>
-													<option value="<?php echo $d['id'] ?>" ?><?php echo $d['name'] ?></option>
-												<?php endwhile; ?>
-											</select>
-										</div>
-										<?php }?>
-										<div class="me-3">
-											<button name="<?php echo isset($isEditing) ? 'editTeacher' : (isset($isAssign)? 'assignTeacher': 'addTeacher'); ?>" type="submit" class="btn btn-success">
-												<?php if (isset($isEditing)) {
-													echo "Update";
-												}
-												elseif(isset($isAssign)){
-													echo "Assign";
-												}
-												 else {
-													echo "Add";
-												} ?>
-											</button>
-										</div>
-									</form>
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</section>
+			<?php $teacherDepartment=mysqli_query($con,"SELECT * FROM `departments`");
+						while($rowDepartment=mysqli_fetch_assoc($teacherDepartment)):?>
+						<div class="table-responsive mt-5 mx-5">
+							<section id="allTeacher">
+								<table class="table table-striped table-hover table-bordered blurred-bg">
+									<caption style="caption-side: top;"><?php echo $rowDepartment['name'];?></caption>
+									<thead>
+										<tr>
+											<th>ID</th>
+											<th>Name</th>
+											<th>Contact</th>
+											<th>email</th>
+											<th>password</th>
+											<th>Action</th>
+										</tr>
+									</thead>
+									<tbody>
+									<?php $srno=0;
+										$teacherClass=mysqli_query($con,"SELECT * FROM `classes` WHERE department_id=".$rowDepartment['id']);
+										while($rowClass=mysqli_fetch_assoc($teacherClass)):
+											$teacherData=mysqli_query($con,"SELECT * FROM `teacher` WHERE id=".$rowClass['teacher_id']);
+											while($rowData=mysqli_fetch_assoc($teacherData)):
+											?>
+											<!-- Bascially there will be two loop first loop will take all the streams and second one take all teacher  from iterated stream loop -->
+											<tr>
+												<td><?php echo ++$srno ?></td>
+												<td>
+													<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $rowData['name'] ?></h5>
+												</td>
+												<td>
+													<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $rowData['contact'] ?></h5>
+												</td>
+												<td>
+													<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $rowData['email'] ?></h5>
+												</td>
+												<td>
+													<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $rowData['password'] ?></h5>
+												</td>
+												<td>
+													<div class="d-flex justify-content-center">
+														<a href="Teacher.php?assign=true&id=<?php echo $rowData['id'] ?>&name=<?php echo $rowData['name']?>" class="ms-2 btn btn-primary btn-sm">Assign</a>
+														<a href="Teacher.php?edit=true&id=<?php echo $rowData['id'] ?>" class="ms-2 btn btn-primary btn-sm">Edit</a>
+														<a href="Teacher.php?details=true&id=<?php echo $rowData['id'] ?>&name=<?php echo $rowData['name']?>" class="ms-2 btn btn-primary btn-sm">Details</a>
+														<a href="Teacher.php?delete=true&id=<?php echo $rowData['id'] ?>" class="ms-2 btn btn-danger btn-sm">Delete</a>
+													</div>
+												</td>
+											</tr>
+											<?php 
+											endwhile;
+										endwhile;
+									endwhile;
+									?>
+										<!-- this like comes at the end of the loop -->
+									</tbody>
+								</table>
+								<table class="table table-striped table-hover table-bordered blurred-bg">
+									<tbody>	
+										<tr>
+											<td>
+												<form method="POST" action="Teacher.php" class="d-flex">
+													<?php if (isset($isEditing) || isset($isAssign)) {
+														echo "<input type='hidden' name='id' value='" . $_GET['id'] . "' />";
+													} ?>
+													<div class="me-3">
+														<input name="name" type="text" class="form-control" placeholder="name" aria-label="year" required value="<?php echo isset($isEditing) ? $editData['name'] : (isset($isAssign)? $_GET['name'] :'') ?>" />
+													</div>
+													<div class="me-3">
+														<input name="<?php echo isset($isAssign)? 'year' : 'contact'?>" type="text" class="form-control" placeholder="<?php echo isset($isAssign) ? 'year' : 'contact';?>" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['contact'] : '' ?>" />
+													</div>
+													<div class="me-3">
+														<input name="<?php echo isset($isAssign)? 'division' : 'email'?>" type="text" class="form-control" placeholder="<?php echo isset($isAssign) ? 'division' : 'email';?>"" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['email'] : '' ?>" />
+													</div>
+													<?php if(isset($isAssign)){?>
+													<div class="me-3">
+													<?php $dquery = mysqli_query($con, "SELECT * FROM `departments`;"); ?>
+														<select name="department_id" class="form-control"> 
+															<?php while ($d = mysqli_fetch_assoc($dquery)) : ?>
+																<option value="<?php echo $d['id'] ?>" ?><?php echo $d['name'] ?></option>
+															<?php endwhile; ?>
+														</select>
+													</div>
+													<?php }?>
+													<div class="me-3">
+														<button name="<?php echo isset($isEditing) ? 'editTeacher' : (isset($isAssign)? 'assignTeacher': 'addTeacher'); ?>" type="submit" class="btn btn-success">
+															<?php if (isset($isEditing)) {
+																echo "Update";
+															}
+															elseif(isset($isAssign)){
+																echo "Assign";
+															}
+															else {
+																echo "Add";
+															} ?>
+														</button>
+													</div>
+												</form>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</section>
+						</div>
 		<?php endif; ?>
 	</div>
 </div>

@@ -2,6 +2,14 @@
 <?php include "../functions/functions.php"?>
 <?php include "../vendor/autoload.php"?>
 
+<?php
+if(isset($_GET['edit']))
+{
+	$isEditing=true;
+	$query=mysqli_query($con,"SELECT * FROM `subject`WHERE id=".$_GET['id']);
+	$assignData=mysqli_fetch_assoc($query);
+}
+?>
 <?php $headerTitle="Prospector | Edit Subject"?>
 <?php $cssFiles="<link rel='stylesheet' href='../assets/css/student_profile.css'/>"?>
 <?php include "../includes/header.php"?>
@@ -11,6 +19,7 @@
     <div class="container">
     <?php include "../includes/Categories_Prospector.php"?>
 	<section id="allSubject">
+		<?php ?>
 		<!-- Division Wise data if any database made -->
 		<div class="table-responsive mt-5 mx-5">
 			<table class="table table-striped table-hover table-bordered blurred-bg">
@@ -32,24 +41,26 @@
 					<?php
 					while($subjectData=mysqli_fetch_assoc($query)):
 						$subTeacherQuery=mysqli_query($con,"SELECT * FROM `teacher` WHERE id=".$subjectData['teacher_id']);
-						// while($r)
+						while($teacherData=mysqli_fetch_array($subTeacherQuery)):
 					?>
 					<tr>
 						<td><?php echo ++$srno;?></td>
 						<td>
-							<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['name'];?></h5>
+							<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $subjectData['name'];?></h5>
 						</td>
 						<td>
-							<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">Sneha</h5>
+							<h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $teacherData['name'];?></h5>
 						</td>
 						<td>
 							<div class="d-flex justify-content-center">
-								<a href="" class="btn btn-success btn-sm">Re-Assign</a>
-								<a href="Teacher.php?delete=true" class="ms-2 btn btn-danger btn-sm">Remove</a>
+								<a href="subject.php?edit=true&id=<?php echo $subjectData['id']?>" class="btn btn-success btn-sm">Edit</a>
+								<a href="subject.php?delete=true&id=<?php echo $subjectData['id']?>" class="ms-2 btn btn-danger btn-sm">Remove</a>
 							</div>
 						</td>
 					</tr>
-					<?php endwhile;?>
+					<?php endwhile;
+					endwhile;
+					?>
 					<!-- this like comes at the end of the loop -->
 					<tr>
 					<td colspan="4">
@@ -58,10 +69,7 @@
 									echo "<input type='hidden' name='id' value='" . $_GET['id'] . "' />";
 								} ?>
 								<div class="me-3">
-									<input name="year" type="text" class="form-control" placeholder="Year" aria-label="year" required value="<?php echo isset($isEditing) ? $editData['year'] : '' ?>" />
-								</div>
-								<div class="me-3">
-									<input name="division" type="text" class="form-control" placeholder="division" aria-label="division" required value="<?php echo isset($isEditing) ? $editData['division'] : '' ?>" />
+									<input name="subject" type="text" class="form-control" placeholder="subject" aria-label="year" required value="<?php echo isset($isEditing) ? $editData['year'] : '' ?>" />
 								</div>
 								<div class="me-3">
 									<?php $dquery = mysqli_query($con, "SELECT * FROM `departments`;"); ?>
