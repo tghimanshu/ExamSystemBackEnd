@@ -50,6 +50,21 @@ function postImage($con)
 	}
 	$query = mysqli_query($con, "UPDATE `answers` SET webcamImages = '$dataurl' WHERE student_id = " . $student_id . " AND paper_id = " . $paper_id);
 }
+function deductAttempt($con)
+{
+	$student_id = $_POST['studentId'];
+	$paper_id = $_POST['paperId'];
+	$query = mysqli_query($con, "UPDATE `answers` SET `attempts` = attempts+1 WHERE student_id = " . $student_id . " AND paper_id = " . $paper_id) or die(mysqli_error($con));
+	$query = mysqli_query($con, "SELECT * FROM `answers` WHERE `student_id` = $student_id AND `paper_id` = $paper_id;");
+	print_r(mysqli_fetch_assoc($query)['attempts']);
+}
+function getAttempt($con)
+{
+	$student_id = $_POST['studentId'];
+	$paper_id = $_POST['paperId'];
+	$query = mysqli_query($con, "SELECT * FROM `answers` WHERE `student_id` = $student_id AND `paper_id` = $paper_id;");
+	print_r(mysqli_fetch_assoc($query)['attempts']);
+}
 
 switch ($_POST['type']) {
 	case "answer_update":
@@ -63,6 +78,11 @@ switch ($_POST['type']) {
 		break;
 	case "post_image":
 		postImage($con);
+	case "deduct_attempt":
+		deductAttempt($con);
+		break;
+	case "get_attempt":
+		getAttempt($con);
 		break;
 	default:
 		break;

@@ -1,6 +1,12 @@
 <?php require "../db/db.php" ?>
 <?php require "../functions/functions.php" ?>
 <?php require "../vendor/autoload.php" ?>
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: login.php");
+}
+?>
 
 <?php function examPapers($con)
 { ?>
@@ -10,28 +16,54 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th>Subject</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <?php
-            $query = mysqli_query($con, "SELECT * FROM `exampaper`");
+            $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` IN (SELECT id FROM `subject` WHERE `class_id` IN (SELECT id FROM `classes` WHERE department_id IN (SELECT id FROM `departments` WHERE id = " . $_SESSION['department_id'] . ")));");
             $srno = 0;
             ?>
             <tbody>
                 <?php while ($row = mysqli_fetch_assoc($query)) : ?>
-                    <tr>
-                        <td><?php echo ++$srno; ?></td>
-                        <td>
-                            <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
-                                <?php echo $row['Subject'] ?>
-                            </h5>
-                        </td>
-                        <td>
-                            <div class="d-flex justify-content-center">
-                                <a href="index.php?examId=<?php echo $row['ID'] ?>" class="btn btn-success btn-sm">View</a>
-                            </div>
-                        </td>
-                    </tr>
+                    <?php
+                    $currTime = new DateTime($timezone = "Asia/Kolkata");
+                    $startTime = new DateTime($row['date'], new DateTimeZone("Asia/Kolkata"));
+                    $endTime = new DateTime($row['endTime'], new DateTimeZone("Asia/Kolkata"));
+                    $startTimeLeft = $currTime->diff($startTime);
+                    $endTimeLeft = $currTime->diff($endTime);
+                    ?>
+                    <?php
+                    if (
+                        (($startTimeLeft->format("%i") < 29 && $startTimeLeft->invert == '0') || $startTimeLeft->invert == '1') &&
+                        (($endTimeLeft->format('%i') < 29 && $endTimeLeft->invert == '1') || $endTimeLeft->invert == '0')
+                    ) {
+                    ?>
+
+                        <tr>
+                            <td>
+                                <?php echo ++$srno; ?>
+                            </td>
+                            <td>
+                                <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                    <?php echo $row['exam_type'] == 1 ? "Regular - " : ($row['exam_type'] == 2 ? "ATKT - " : "Mock - "); ?>
+                                    <?php echo $row['exam_type'] == 3 ? $row['name'] : ($row['name'] == '1' ? "Internal" : "External"); ?>
+                                </h5>
+                            </td>
+                            <td>
+                                <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                    <?php $subject = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE id = " . $row['subject_id'])); ?>
+                                    <?php echo $subject['name'] ?>
+                                </h5>
+                            </td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <a href="index.php?examId=<?php echo $row['id'] ?>" class="btn btn-success btn-sm">View</a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php }
+                    ?>
                 <?php endwhile; ?>
             </tbody>
         </table>
@@ -41,21 +73,30 @@
 
 <?php function studentData($con)
 { ?>
+    <div class="container mt-4">
+        <a href="index.php?mail=true" class="btn btn-success">Send Credentials Mail</a>
+        <a href="export.php?result=true&examId=<?php echo $_GET['examId']; ?>" class="btn btn-primary">Export Results</a>
+    </div>
     <div class="table-responsive mt-5 mx-5">
-        <table class="table table-striped table-hover table-bordered blurred-bg">
+        <table class="table ta:q
+        ble-striped table-hover table-bordered blurred-bg">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
                     <th>Status</th>
                     <th>Actions</th>
+                    <th>Marks</th>
                 </tr>
             </thead>
             <?php
-            $query = mysqli_query($con, "SELECT * FROM `student`");
+            // $query = mysqli_query($con, "SELECT * FROM `student`");
+            $query = mysqli_query($con, "SELECT * FROM student WHERE class_id IN (SELECT class_id from subject WHERE id in (SELECT subject_id from exampaper where id = " . $_GET['examId'] . "))");
             $srno = 0;
             ?>
             <tbody>
+                <div class="text-white">
+                </div>
                 <?php while ($row = mysqli_fetch_assoc($query)) : ?>
                     <tr>
                         <td><?php echo ++$srno; ?></td>
@@ -73,6 +114,15 @@
                                 if (mysqli_num_rows($status) == 1) {
                                     $studentStatus = mysqli_fetch_assoc($status);
                                     echo $studentStatus['submitted'] == 1 ? "Completed" : "Attempting";
+                                    if ($studentStatus['submitted'] != 1) {
+                                        if (isset($_SESSION['student_' . $srno])) {
+                                            if ($_SESSION['student_' . $srno] == $studentStatus['timeElapsed']) {
+                                                echo " (Paused)";
+                                                $paused = true;
+                                            }
+                                        }
+                                        $_SESSION['student_' . $srno] = $studentStatus['timeElapsed'];
+                                    }
                                 } else {
                                     unset($studentStatus);
                                     echo "Not Yet Started";
@@ -85,12 +135,31 @@
                                 <?php if (isset($studentStatus)) { ?>
                                     <a href="index.php?answerId=<?php echo $studentStatus['id'] ?>" class="btn btn-success btn-sm">View</a>
                                 <?php } else { ?>
-                                    <button href="#" class="btn btn-success btn-sm" disabled>View</button>
+                                    <button class="btn btn-success btn-sm" disabled>View</button>
                                 <?php } ?>
                                 <?php if (isset($studentStatus) && $studentStatus['submitted'] == 1) { ?>
                                     <a href="index.php?resumesid=<?php echo $row['id'] ?>&resumepid=<?php echo $_GET['examId'] ?>" class="ms-2 btn btn-danger btn-sm">Resume Test</a>
                                 <?php } ?>
+                                <?php if (isset($studentStatus) && isset($paused) && $row['isLoggedIn'] == 1) { ?>
+                                    <a href="index.php?allowLoginId=<?php echo $row['id'] ?>&pid=<?php echo $_GET['examId'] ?>" class="ms-2 btn btn-sm btn-danger">Allow Login</a>
+                                <?php } ?>
                             </div>
+                        </td>
+                        <td>
+                            <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                <?php
+                                $studentId = (int)$row['id'];
+                                $paperId =  (int)$_GET['examId'];
+                                $status = mysqli_query($con, "SELECT * FROM `answers` WHERE `student_id` = $studentId AND `paper_id` = $paperId;") or die(mysqli_error($con));
+                                if (mysqli_num_rows($status) == 1) {
+                                    $studentStatus = mysqli_fetch_assoc($status);
+                                    echo getResult($studentId, $paperId);
+                                } else {
+                                    unset($studentStatus);
+                                    echo "0";
+                                }
+                                ?>
+                            </h5>
                         </td>
                     </tr>
                 <?php endwhile; ?>

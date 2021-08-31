@@ -659,6 +659,16 @@ class SimpleXLSX {
 		$numCols = $dim[0];
 		$numRows = $dim[1];
 
+		$hiddenCols = [];
+		/* @var SimpleXMLElement $ws */
+		foreach( $ws->cols->col as $col ) {
+			for ( $i = (int) $col['min']; $i <= (int) $col['max']; $i++ ) {
+				if ( $col['hidden'] ) {
+					$hiddenCols[] = $i - 1;
+				}
+			}
+		}
+
 		for ( $y = 0; $y < $numRows; $y ++ ) {
 			for ( $x = 0; $x < $numCols; $x ++ ) {
 				// 0.6.8
@@ -673,17 +683,21 @@ class SimpleXLSX {
 					'href'   => '',
 					'f'      => '',
 					'format' => '',
-					'r'      => $y
+					'r'      => $y,
+					'hidden'      => count($hiddenCols) && in_array($x, $hiddenCols, true )
 				];
 			}
 		}
 
+
 		$curR = 0;
-		/* @var SimpleXMLElement $ws */
+
 		foreach ( $ws->sheetData->row as $row ) {
 
-			$r_idx = (int) $row['r'];
 			$curC  = 0;
+
+			$r_idx = (int) $row['r'];
+			$r_hidden = (bool) $row['hidden'];
 
 			foreach ( $row->c as $c ) {
 				$r = (string) $c['r'];
@@ -704,6 +718,10 @@ class SimpleXLSX {
 				} else {
 					$format = '';
 				}
+				$hidden = $r_hidden;
+				if ( !$hidden && count($hiddenCols) && in_array($curC, $hiddenCols, true )) {
+					$hidden = true;
+				}
 
 				$rows[ $curR ][ $curC ] = [
 					'type'   => $t,
@@ -712,7 +730,8 @@ class SimpleXLSX {
 					'href'   => $this->href( $worksheetIndex, $c ),
 					'f'      => (string) $c->f,
 					'format' => $format,
-					'r'      => $r_idx
+					'r'      => $r_idx,
+					'hidden' => $hidden,
 				];
 				$curC ++;
 			}
@@ -867,7 +886,7 @@ class SimpleXLSX {
 			if ( $s > 0 && isset( $this->cellFormats[ $s ] ) ) {
 				if (array_key_exists('format', $this->cellFormats[ $s ])) {
 					$format = $this->cellFormats[ $s ]['format'];
-					if ( preg_match( '/[mM]/', $format ) ) { // [m]onth
+					if ( preg_match( '/(m|AM|PM)/', preg_replace('/\"[^"]+\"/','', $format) ) ) { // [mm]onth,AM|PM
 						$dataType = 'd';
 					}
 				}

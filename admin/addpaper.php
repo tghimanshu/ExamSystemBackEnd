@@ -3,7 +3,7 @@
 <?php require "../vendor/autoload.php" ?>
 <?php
 session_start();
-if (!isset($_SESSION['email'])) {
+if (!isset($_SESSION['username'])) {
 	header("Location: login.php");
 }
 ?>
@@ -15,21 +15,27 @@ if (!isset($_SESSION['email'])) {
 
 if (isset($_POST['psubmit'])) {
 	date_default_timezone_set("Asia/Kolkata");
-	$pclass = mysqli_real_escape_string($con, $_POST['pclass']);
 	$date = new DateTime(mysqli_real_escape_string($con, $_POST['pdate']));
 	$EndDate = new DateTime(mysqli_real_escape_string($con, $_POST['penddate']));
 	$pdate = $date->format('Y-m-d H:i:s');
 	$pEndDate = $EndDate->format('Y-m-d H:i:s');
+	$pexamtype = mysqli_real_escape_string($con, $_POST['pexamtype']);
+	$pname = mysqli_real_escape_string($con, $_POST['pname']);
 	$psubject = mysqli_real_escape_string($con, $_POST['psubject']);
 	$myQuestionsFile = storeUploadedFile($_FILES['pfile']);
-	$myQuestionImagesFile = storeUploadedImages($_FILES['pimgfiles'], $date->format('m-d-') . $pclass . $psubject);
+	$myQuestionImagesFile = storeUploadedImages($_FILES['pimgfiles'], $date->format('m-d-') . $psubject . $pname);
 	$questions = getQuestionsFromExcel($myQuestionsFile);
 	$answers = getAnswersFromExcel($myQuestionsFile);
 	$timee = $date->diff($EndDate);
 	$timeElapsed = ($timee->h != 0 ? 60 * $timee->h : $timee->i) . ':' . $timee->s + 1;
 	$pq = urlencode($questions);
 	$pa = urlencode($answers);
-	$q = mysqli_query($con, "INSERT INTO `exampaper`(`Questions`, `Class`, `Subject`,`date`,`endTime`, `answers`, `timeLimit`) VALUES ('$pq','$pclass','$psubject', '$pdate','$pEndDate', '$pa', '$timeElapsed' )");
+	// for getting mock test last number
+	$mockNumber =  mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` = $psubject AND `exam_type` = 3 ORDER BY `name` DESC;"));
+	$mockNumber = intval($mockNumber['name']);
+	$mockNumber++;
+	$mockNumber = $pname == '3' ? $mockNumber : $pname;
+	$q = mysqli_query($con, "INSERT INTO `exampaper`(`exam_type`, `name`,`Questions`, `subject_id`,`date`,`endTime`, `answers`, `timeLimit`) VALUES ($pexamtype, '$mockNumber','$pq','$psubject', '$pdate','$pEndDate', '$pa', '$timeElapsed' )");
 	if (!$q) {
 		echo "error";
 		print_r(mysqli_error($con));
@@ -44,16 +50,54 @@ if (isset($_POST['psubmit'])) {
 <div class="app">
 	<?php include "../includes/navbar-admin.php" ?>
 	<div class="container blurred-bg px-5">
-		<h1 class="text-center text-white mt-4">Add New Question Paper</h1>
+		<?php
+		if (isset($_GET['subject_id'])) {
+			$dquery = mysqli_query($con, "SELECT * FROM `subject` WHERE `id`=" . $_GET['subject_id']);
+			$subject = mysqli_fetch_assoc($dquery);
+		}
+		?>
+		<h1 class="text-center text-white mt-4">Add New <?php echo isset($_GET['subject_id']) ? $subject['name'] : "" ?> Question Paper</h1>
 		<form action="addpaper.php" method="POST" enctype="multipart/form-data">
-			<div class="input-group mb-2">
-				<label for="pclass" class="input-group-text">Class</label>
-				<input required type="text" id="pclass" class="form-control" placeholder="Enter Class Name" name="pclass" />
-			</div>
-
-			<div class="input-group mb-2">
+			<div class="input-group mb-2 <?php echo isset($_GET['subject_id']) ? 'd-none' : "" ?>">
 				<label for="psubject" class="input-group-text">subject</label>
-				<input required type="text" id="psubject" class="form-control" placeholder="Enter Subject Name" name="psubject" />
+				<select name="psubject" class="form-control">
+					<?php $cquery = mysqli_query($con, "SELECT * FROM `classes` WHERE `department_id` = " . $_SESSION['department_id']); ?>
+					<?php while ($c = mysqli_fetch_assoc($cquery)) : ?>
+						<optgroup label="<?php echo $c['year'] ?>">
+							<?php $dquery = mysqli_query($con, "SELECT * FROM `subject` WHERE `class_id` = " . $c['id']); ?>
+							<?php while ($d = mysqli_fetch_assoc($dquery)) : ?>
+								<option value="<?php echo $d['id'] ?>" <?php echo isset($_GET['subject_id']) && $_GET['subject_id'] == $d['id'] ? "selected" : "" ?>><?php echo 'SEM ' . $d['sem'] . ' - ' . $d['name'] ?></option>
+							<?php endwhile; ?>
+						</optgroup>
+					<?php endwhile; ?>
+				</select>
+			</div>
+			<div class="input-group mb-2">
+				<label for="pexamtype" class="input-group-text">exam type</label>
+				<script>
+					function isMock(e) {
+						if (parseInt(e.value) === 3) {
+							document.getElementById('paperName').style.display = 'none'
+							document.getElementById('pname').value = '3';
+						} else {
+							document.getElementById('paperName').style.display = 'flex'
+							document.getElementById('pname').value = '1';
+						}
+					}
+				</script>
+				<select name="pexamtype" class="form-control" onchange="isMock(this)">
+					<option value="1">Regular</option>
+					<option value="2">ATKT</option>
+					<option value="3">Mock</option>
+				</select>
+			</div>
+			<div class="input-group mb-2" id="paperName">
+				<label for="pname" class="input-group-text">exam type</label>
+				<select name="pname" class="form-control" id="pname">
+					<option value="1">Internal</option>
+					<option value="2">External</option>
+					<option value="3" class="d-none"></option>
+				</select>
 			</div>
 			<div class="input-group mb-2">
 				<label for="pdate" class="input-group-text">StartDate & time</label>

@@ -17,12 +17,12 @@ if (isset($_GET['edit'])) {
 	$editData = mysqli_fetch_assoc($editQuery);
 }
 
-if (isset($_POST['adddepartment'])) {
-	$name = mysqli_escape_string($con, $_POST['name']);
-	$slug = mysqli_escape_string($con, $_POST['slug']);
-	$addQuery = mysqli_query($con, "INSERT INTO `departments` VALUES (null, '$name', '$slug')") or die(mysqli_error($con));
-	$successMessage = "Added Department SucessFully!!";
-}
+// if (isset($_POST['adddepartment'])) {
+// 	$name = mysqli_escape_string($con, $_POST['name']);
+// 	$slug = mysqli_escape_string($con, $_POST['slug']);
+// 	$addQuery = mysqli_query($con, "INSERT INTO `departments` SET () VALUES (null, '$name', '$slug')") or die(mysqli_error($con));
+// 	$successMessage = "Added Department SucessFully!!";
+// }
 if (isset($_POST['editdepartment'])) {
 	$id = mysqli_escape_string($con, $_POST['id']);
 	$name = mysqli_escape_string($con, $_POST['name']);
@@ -37,9 +37,9 @@ if (isset($_POST['editdepartment'])) {
 <?php $cssFiles = "<link rel='stylesheet' href='../assets/css/student_profile.css'/>" ?>
 <?php include "../includes/header.php" ?>
 <div class="app">
-	<?php include "../includes/navbar-Prospector_Student.php"?>
+	<?php include "../includes/navbar-Prospector_Student.php" ?>
 	<div class="container">
-		<?php include "../includes/Categories_Prospector.php"?>
+		<?php include "../includes/Categories_Prospector.php" ?>
 		<section id="allDepartment">
 			<!-- Bascially there will be two loop first loop will take all the streams and second one take all teacher  from iterated stream loop -->
 			<?php

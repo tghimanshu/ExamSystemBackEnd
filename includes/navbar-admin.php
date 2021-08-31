@@ -5,21 +5,24 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         <div>
-			<a href="logout.php" class="btn btn-danger">Logout</a>
-		</div>
+            <a href="logout.php" class="btn btn-danger">Logout</a>
+        </div>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-0 ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/">Home</a>
+                    <a class="nav-link" href="/admin">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/class.php">Add Class & Subjects</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/admin/addpaper.php">Add Paper</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/addstudents.php">Add Students</a>
+                    <a class="nav-link" href="/admin/addstudents.php">Add Student</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/admin/answers.php">Answer Review</a>
+                    <a class="nav-link" href="/admin/pastpapers.php">Past Papers</a>
                 </li>
             </ul>
         </div>

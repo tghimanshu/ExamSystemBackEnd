@@ -1,6 +1,5 @@
 function getFiftyId(qlen) {
   const attemptableq = [];
-
   while (attemptableq.length < 50) {
     let a = Math.floor(Math.random() * qlen);
     if (!attemptableq.includes(a)) {
@@ -18,9 +17,56 @@ $(document).ready(function () {
       window.outerHeight === window.screen.availHeight &&
       window.outerWidth === window.screen.availWidth
     ) {
-      superErrorContainer.html("");
+      // superErrorContainer.html("");
     } else {
-      superErrorContainer.html("<div id='superError'></div>");
+      // superErrorContainer.html("<div id='superError'></div>");
+      $.post(
+        "answer_update.php",
+        {
+          type: "get_attempt",
+          studentId: student_id,
+          paperId: paper_id,
+        },
+        function (data, status, xhr) {
+          console.log("data; " + data);
+          Swal.fire({
+            icon: "",
+            title: `Attempts Used ${parseInt(data) + 1}/5`,
+            text: "Your tried resizing the tab",
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            preConfirm: (login) => {
+              $.post(
+                "answer_update.php",
+                {
+                  type: "deduct_attempt",
+                  studentId: student_id,
+                  paperId: paper_id,
+                },
+                function (data, status, xhr) {
+                  if (parseInt(data) > 4) {
+                    $.post(
+                      "answer_update.php",
+                      {
+                        type: "submit_exam",
+                        studentId: student_id,
+                        paperId: paper_id,
+                      },
+                      function (data, status, xhr) {
+                        localStorage.removeItem("timeElapsed");
+                        $(window).off("unload");
+                        $(window).off("beforeunload");
+                        window.location = "index.php";
+                      }
+                    );
+                    localStorage.removeItem("timeElapsed");
+                  }
+                }
+              );
+            },
+          });
+        }
+      );
     }
   }
 
@@ -28,7 +74,54 @@ $(document).ready(function () {
   window.addEventListener("resize", resizeevent);
 
   $(window).blur(function () {
-    superErrorContainer.html("<div id='superError'></div>");
+    // superErrorContainer.html("<div id='superError'></div>");
+    $.post(
+      "answer_update.php",
+      {
+        type: "get_attempt",
+        studentId: student_id,
+        paperId: paper_id,
+      },
+      function (data, status, xhr) {
+        console.log("data; " + data);
+        Swal.fire({
+          icon: "",
+          title: `Attempts Used ${parseInt(data) + 1}/5`,
+          text: "Your tried leaving the tab",
+          allowEscapeKey: false,
+          allowOutsideClick: false,
+          preConfirm: (login) => {
+            $.post(
+              "answer_update.php",
+              {
+                type: "deduct_attempt",
+                studentId: student_id,
+                paperId: paper_id,
+              },
+              function (data, status, xhr) {
+                if (parseInt(data) > 4) {
+                  $.post(
+                    "answer_update.php",
+                    {
+                      type: "submit_exam",
+                      studentId: student_id,
+                      paperId: paper_id,
+                    },
+                    function (data, status, xhr) {
+                      localStorage.removeItem("timeElapsed");
+                      $(window).off("unload");
+                      $(window).off("beforeunload");
+                      window.location = "index.php";
+                    }
+                  );
+                  localStorage.removeItem("timeElapsed");
+                }
+              }
+            );
+          },
+        });
+      }
+    );
   });
 
   $("body").on("contextmenu", function (e) {
@@ -36,7 +129,6 @@ $(document).ready(function () {
   });
 
   document.addEventListener("keydown", function (event) {
-    console.log(event.which);
     if (event.which == "123") {
       event.preventDefault();
     }
@@ -52,7 +144,25 @@ $(document).ready(function () {
   // END OF CHECKING FOR KAANDS
   let student_id = $("#student_id").text();
   let paper_id = $("#paper_id").text();
-  console.log($("#answers").text());
+  $(window).on("beforeunload", function () {
+    return "Are you sure want to LOGOUT the session ?";
+  });
+
+  $(window).on("unload", function () {
+    $.post(
+      "answer_update.php",
+      {
+        type: "submit_exam",
+        studentId: student_id,
+        paperId: paper_id,
+      },
+      function (data, status, xhr) {
+        localStorage.removeItem("timeElapsed");
+        window.location = "index.php";
+      }
+    );
+    localStorage.removeItem("timeElapsed");
+  });
   let dbAnswers =
     $("#answers").text() === ""
       ? Array()
@@ -80,7 +190,6 @@ $(document).ready(function () {
           review: false,
         }))
       : dbAnswers;
-  console.log(answerSheet);
 
   const generateAnswersTracker = () => {
     document.getElementById("tracker").innerHTML = "";
@@ -185,21 +294,66 @@ $(document).ready(function () {
                 `;
   });
   function submitAnswerSheet() {
-    localStorage.removeItem("timeElapsed");
-    $.post(
-      "answer_update.php",
-      {
-        type: "submit_exam",
-        studentId: student_id,
-        paperId: paper_id,
-      },
-      function (data, status, xhr) {
-        alert("exam submitted");
-        localStorage.removeItem("timeElapsed");
-        window.location = "index.php";
+    console.log("Answers");
+    let a = 0;
+    let u = 0;
+    let r = 0;
+    let ar = 0;
+    answerSheet.map(({ answer, review }) => {
+      if (answer === 0 && review === false) {
+        u += 1;
+      } else if (answer !== 0 && review === false) {
+        a += 1;
+      } else if (answer !== 0 && review === true) {
+        ar += 1;
+      } else if (answer === 0 && review === true) {
+        r += 1;
       }
-    );
-    localStorage.removeItem("timeElapsed");
+    });
+    Swal.fire({
+      title: "Are you sure?",
+      html: `
+        <div class="color-infos">
+            <div class="d-flex align-items-center">
+                <div id="" style="cursor:pointer;width: 20px;height: 20px;" class="anstab mb-1 badge bg-success d-flex justify-content-center align-items-center">${a}</div>
+                <p class="m-0 ms-3">Attempted</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <div id="" style="cursor:pointer;width: 20px;height: 20px;" class="anstab mb-1 badge bg-primary d-flex justify-content-center align-items-center">${r}</div>
+                <p class="m-0 ms-3">Review</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <div id="" style="cursor:pointer;width: 20px;height: 20px;" class="anstab mb-1 badge bg-info d-flex justify-content-center align-items-center">${ar}</div>
+                <p class="m-0 ms-3">Attempted and Review</p>
+            </div>
+            <div class="d-flex align-items-center">
+                <div id="" style="cursor:pointer;width: 20px;height: 20px;" class="anstab mb-1 badge bg-light text-dark d-flex justify-content-center align-items-center">${u}</div>
+                <p class="m-0 ms-3">Unattempted</p>
+            </div>
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Submit!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("timeElapsed");
+        $.post(
+          "answer_update.php",
+          {
+            type: "submit_exam",
+            studentId: student_id,
+            paperId: paper_id,
+          },
+          function (data, status, xhr) {
+            localStorage.removeItem("timeElapsed");
+            window.location = "index.php";
+          }
+        );
+        localStorage.removeItem("timeElapsed");
+      }
+    });
   }
   function updateAnswerSheet(id) {
     let val = document.getElementById(`o-${id}-1`).checked
