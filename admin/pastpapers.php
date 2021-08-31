@@ -4,6 +4,14 @@
 
 <?php
 
+if (isset($_GET['filterSubmit'])) {
+    $subject_id = $_GET['psubject'];
+}
+
+?>
+
+<?php
+
 if (isset($_GET['mail'])) {
     $mquery = mysqli_query($con, "SELECT * FROM `student`;");
     while ($value = mysqli_fetch_assoc($mquery)) {
@@ -76,6 +84,26 @@ if (isset($_GET['allowLoginId'])) {
     <?php include("../includes/navbar-admin.php") ?>
 
     <div id="main">
+        <div class="container pt-4">
+            <form action="pastpapers.php" method="GET" class="row">
+                <div class="col-12 col-md-7 col-lg-5">
+                    <select name="psubject" class="form-control">
+                        <?php $cquery = mysqli_query($con, "SELECT * FROM `classes` WHERE `department_id` = " . $_SESSION['department_id']); ?>
+                        <?php while ($c = mysqli_fetch_assoc($cquery)) : ?>
+                            <optgroup label="<?php echo $c['year'] ?>">
+                                <?php $dquery = mysqli_query($con, "SELECT * FROM `subject` WHERE `class_id` = " . $c['id']); ?>
+                                <?php while ($d = mysqli_fetch_assoc($dquery)) : ?>
+                                    <option value="<?php echo $d['id'] ?>" <?php echo isset($_GET['filterSubmit']) && $_GET['psubject'] == $d['id'] ? "selected" : "" ?>><?php echo 'SEM ' . $d['sem'] . ' - ' . $d['name'] ?></option>
+                                <?php endwhile; ?>
+                            </optgroup>
+                        <?php endwhile; ?>
+                    </select>
+                </div>
+                <div class="col-12 col-md-2 col-lg-1">
+                    <button name="filterSubmit" type="submit" class="btn btn-success">Filter</button>
+                </div>
+            </form>
+        </div>
         <div class="table-responsive mt-5 mx-5">
             <table class="table table-striped table-hover table-bordered blurred-bg">
                 <thead>
@@ -88,7 +116,11 @@ if (isset($_GET['allowLoginId'])) {
                     </tr>
                 </thead>
                 <?php
-                $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` IN (SELECT id FROM `subject` WHERE `class_id` IN (SELECT id FROM `classes` WHERE department_id IN (SELECT id FROM `departments` WHERE id = " . $_SESSION['department_id'] . ")));");
+                if (isset($_GET['filterSubmit'])) {
+                    $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` = " . $_GET['psubject']);
+                } else {
+                    $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` IN (SELECT id FROM `subject` WHERE `class_id` IN (SELECT id FROM `classes` WHERE department_id IN (SELECT id FROM `departments` WHERE id = " . $_SESSION['department_id'] . ")));");
+                }
                 $srno = 0;
                 ?>
                 <tbody>

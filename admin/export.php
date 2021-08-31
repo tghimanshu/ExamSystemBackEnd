@@ -16,7 +16,7 @@ $filename = "results";         //File Name
 $students = mysqli_query($con, "SELECT * FROM `student` WHERE `class_id` IN (SELECT class_id from `subject` WHERE  id IN (SELECT subject_id FROM `exampaper` WHERE `id` = $examId));") or die("Couldn't execute query:<br>");
 $pquery = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `id` = $examId;");
 $paper = mysqli_fetch_assoc($pquery);
-$filename = $paper['name'] . " - " . mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE `id` = " . $paper['subject_id']))['name'];
+$filename = ($paper['exam_type'] == 1 ? "Regular" : ($paper['exam_type'] == 2 ? "ATKT" : "Mock")) . "-" . ($paper['exam_type'] != 3 ? ($paper['name'] == "1" ? "Internal" : "External") : $paper['name']) . " - " . mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE `id` = " . $paper['subject_id']))['name'];
 $file_ending = "csv";
 
 
