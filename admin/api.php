@@ -187,12 +187,15 @@ if (!isset($_SESSION['username'])) {
         ?>
     </div>
     <?php
-    $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `ID` = " . $data['paper_id']);
+    $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `id` = " . $data['paper_id']);
     $paperData = mysqli_fetch_assoc($query);
     $q = json_decode(urldecode($paperData['Questions']), true);
     $a = json_decode(urldecode($paperData['answers']), true);
     $date = new DateTime($paperData['date']);
-    $folderName = "/admin/uploads/" . $date->format('m-d-') . $paperData['Class'] . $paperData['Subject'];
+    //to get the subject name
+    $subjectQuery=mysqli_fetch_assoc(mysqli_query($con,"SELECT * FROM `subject` WHERE `id`=".$paperData['subject_id']));
+    // providing examtype and examname
+    $folderName = "/admin/uploads/" . $date->format('m-d-') . ($paperData['exam_type']==1?"Regular":($paperData['exam_type']==2?"ATKT":"Mock")).$paperData['name']=='1'?"Internal":($paperData['name']=='2'?"External":$paperData["name"]). $subjectQuery['name'];
 
     ?>
     <?php $marks = 0; ?>

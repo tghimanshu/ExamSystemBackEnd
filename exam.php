@@ -20,7 +20,7 @@ if ($myCurrPaper['submitted'] === '1') {
     header("Location: index.php");
 }
 
-$query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE ID = " . $_GET['id']);
+$query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE id = " . $_GET['id']);
 $data = mysqli_fetch_assoc($query);
 echo "<script>localStorage.removeItem('timeElapsed')</script>";
 
@@ -62,7 +62,8 @@ echo "<script>localStorage.removeItem('timeElapsed')</script>";
         <div class="d-none" id="answers"><?php echo urldecode($myCurrPaper['answers']); ?></div>
         <div class="d-none" id="imagesDir"><?php
                                             $date = new DateTime($data['date']);
-                                            echo "/admin/uploads/" . $date->format('m-d-') . $data['Class'] . $data['Subject'] ?></div>
+                                            $subjectQuery=mysqli_fetch_assoc(mysqli_query($con,"SELECT * FROM `subject` WHERE `id`=".$data['subject_id']));
+                                            echo "/admin/uploads/" .($data['exam_type']==1?"Regular":($data['exam_type']==2?"ATKT":"Mock")).$data['name']=='1'?"Internal":($data['name']=='2'?"External":$data["name"]). $subjectQuery['name']?></div>
         <!-- NAVBAR -->
         <!-- questions & tracker  -->
         <nav class="navbar bg-primary navbar-dark py-2">
