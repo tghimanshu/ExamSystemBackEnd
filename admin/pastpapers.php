@@ -110,6 +110,7 @@ if (isset($_GET['allowLoginId'])) {
                     <tr>
                         <th>ID</th>
                         <th>Name</th>
+                        <th>Time</th>
                         <th>Subject</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -139,6 +140,11 @@ if (isset($_GET['allowLoginId'])) {
                                 <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
                                     <?php echo $row['exam_type'] == 1 ? "Regular - " : ($row['exam_type'] == 2 ? "ATKT - " : "Mock - "); ?>
                                     <?php echo $row['exam_type'] == 3 ? $row['name'] : ($row['name'] == '1' ? "Internal" : "External"); ?>
+                                </h5>
+                            </td>
+                            <td>
+                                <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                    <?php echo $startTime->format("Y/M/d h:i:s"); ?>
                                 </h5>
                             </td>
                             <td>

@@ -42,7 +42,7 @@ if (isset($_POST['editsubject'])) {
 
 ?>
 
-<?php $headerTitle = "Prospector | Index" ?>
+<?php $headerTitle = "Papers | Index" ?>
 <?php $cssFiles = "<link rel='stylesheet' href='../assets/css/student_profile.css'/>" ?>
 <?php include "../includes/header.php" ?>
 <div class="app">
@@ -73,7 +73,10 @@ if (isset($_POST['editsubject'])) {
                             <tr>
                                 <td><?php echo ++$srno; ?></td>
                                 <td>
-                                    <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject"><?php echo $row['name']; ?></h5>
+                                    <h5 class="fw-bold d-flex align-items-center justify-content-center ps-4 subject">
+                                        <?php echo $row['exam_type'] == 1 ? "Regular - " : ($row['exam_type'] == 2 ? "ATKT - " : "Mock - "); ?>
+                                        <?php echo $row['exam_type'] == 3 ? $row['name'] : ($row['name'] == '1' ? "Internal" : "External"); ?>
+                                    </h5>
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">

@@ -11,7 +11,7 @@ if (!isset($_SESSION['username'])) {
 ?>
 
 
-<?php $headerTitle = "Prospector | Index" ?>
+<?php $headerTitle = "Students | Index" ?>
 <?php $cssFiles = "<link rel='stylesheet' href='../assets/css/student_profile.css'/>" ?>
 <?php include "../includes/header.php" ?>
 <div class="app">

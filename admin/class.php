@@ -77,9 +77,18 @@ if (isset($_POST['editsubject'])) {
 
 ?>
 
-<?php $headerTitle = "Prospector | Index" ?>
+<?php
+if (isset($_GET['class_id'])) {
+    $headerTitle = "Subjects | Admin";
+} else {
+    $headerTitle = "Class | Admin";
+}
+?>
+
 <?php $cssFiles = "<link rel='stylesheet' href='../assets/css/student_profile.css'/>" ?>
+
 <?php include "../includes/header.php" ?>
+
 <div class="app">
     <?php include "../includes/navbar-admin.php" ?>
     <?php if (isset($_GET['class_id'])) : ?>
@@ -211,7 +220,7 @@ if (isset($_POST['editsubject'])) {
                                         <div class="d-flex justify-content-center">
                                             <a style="text-shadow: none;" href="class.php?edit=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-primary btn-sm">Edit</a>
                                             <a style="text-shadow: none;" href="class.php?class_id=<?php echo $row['id'] ?>" class="ms-2 btn btn-info btn-sm">View</a>
-                                            <a style="text-shadow: none;" href="student.php?class_id=<?php echo $row['id'] ?>" class="ms-2 btn btn-warning btn-sm" >Students</a>
+                                            <a style="text-shadow: none;" href="student.php?class_id=<?php echo $row['id'] ?>" class="ms-2 btn btn-warning btn-sm">Students</a>
                                             <a style="text-shadow: none;" href="class.php?delete=true&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-danger btn-sm">Remove</a>
                                         </div>
                                     </td>

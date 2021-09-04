@@ -177,15 +177,17 @@ if (!isset($_SESSION['username'])) {
     $answers = json_decode(urldecode($data['answers']));
     $webcamImages = array_reverse(explode("~", $data['webcamImages']));
     ?>
-    <div class="row mt-5 mx-5" style="max-height: 600px;overflow-y:auto">
-        <?php
-        foreach ($webcamImages as $key => $value) {
-        ?>
-            <div class="col-6 col-md-3 col-lg-2 mb-1"><img src="<?php echo $value ?>" alt="image" width="100%" height="auto" /></div>
-        <?php
-        }
-        ?>
-    </div>
+    <?php if ($webcamImages[0] != "") : ?>
+        <div class="row mt-5 mx-5 d-flex justify-content-center" style="max-height: 600px;overflow-y:auto">
+            <?php
+            foreach ($webcamImages as $key => $value) {
+            ?>
+                <div class="col-6 col-md-3 col-lg-2 mb-1"><img src="<?php echo $value ?>" alt="image" width="100%" height="auto" /></div>
+            <?php
+            }
+            ?>
+        </div>
+    <?php endif; ?>
     <?php
     $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `id` = " . $data['paper_id']);
     $paperData = mysqli_fetch_assoc($query);
@@ -193,41 +195,51 @@ if (!isset($_SESSION['username'])) {
     $a = json_decode(urldecode($paperData['answers']), true);
     $date = new DateTime($paperData['date']);
     //to get the subject name
-    $subjectQuery=mysqli_fetch_assoc(mysqli_query($con,"SELECT * FROM `subject` WHERE `id`=".$paperData['subject_id']));
+    $subjectQuery = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE `id`=" . $paperData['subject_id']));
     // providing examtype and examname
-    $folderName = "/admin/uploads/" . $date->format('m-d-') . ($paperData['exam_type']==1?"Regular":($paperData['exam_type']==2?"ATKT":"Mock")).$paperData['name']=='1'?"Internal":($paperData['name']=='2'?"External":$paperData["name"]). $subjectQuery['name'];
+    $folderName = "/admin/uploads/" . $date->format('m-d-') . ($paperData['exam_type'] == 1 ? "Regular" : ($paperData['exam_type'] == 2 ? "ATKT" : "Mock")) . $paperData['name'] == '1' ? "Internal" : ($paperData['name'] == '2' ? "External" : $paperData["name"]) . $subjectQuery['name'];
 
     ?>
     <?php $marks = 0; ?>
-    <?php foreach ($answers as $key => $answer) { ?>
+    <?php
+    if ($answers) {
+
+        foreach ($answers as $key => $answer) { ?>
         <?php if ($a[$answer->qId]['answer'] != $answer->answer && $answer->answer != 0) {
-            echo 'bg-danger';
-        } else if ($a[$answer->qId]['answer'] == $answer->answer) {
-            $marks++;
+                echo 'bg-danger';
+            } else if ($a[$answer->qId]['answer'] == $answer->answer) {
+                $marks++;
+            }
         } ?>
     <?php } ?>
-    <div class="table-responsive mt-2 mx-5">
-        <table class="table table-striped table-hover table-bordered blurred-bg">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>question</th>
-                    <th>Answer <?php echo $marks; ?></th>
-                    <th>Correct Answer</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($answers as $key => $answer) { ?>
-                    <tr class="<?php echo $a[$answer->qId]['answer'] != $answer->answer && $answer->answer != 0 ? 'bg-danger' : ($a[$answer->qId]['answer'] == $answer->answer ? 'bg-success' : ''); ?>">
-                        <td><?php echo $key + 1; ?></td>
-                        <td><?php print_r(trim($q[$answer->qId]['question']) == "" ? "<img src='$folderName/" . ($answer->qId + 1) . ".jpg' width='100px' height='auto' />" : $q[$answer->qId]['question']) ?></td>
-                        <td><?php print_r($answer->answer) ?></td>
-                        <td><?php print_r($a[$answer->qId]['answer']) ?></td>
+    <?php if ($answers) : ?>
+        <div class="table-responsive mt-2 mx-5">
+            <table class="table table-striped table-hover table-bordered blurred-bg">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>question</th>
+                        <th>Answer <?php echo $marks; ?></th>
+                        <th>Correct Answer</th>
                     </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    <?php foreach ($answers as $key => $answer) { ?>
+                        <tr class="<?php echo $a[$answer->qId]['answer'] != $answer->answer && $answer->answer != 0 ? 'bg-danger' : ($a[$answer->qId]['answer'] == $answer->answer ? 'bg-success' : ''); ?>">
+                            <td><?php echo $key + 1; ?></td>
+                            <td><?php print_r(trim($q[$answer->qId]['question']) == "" ? "<img src='$folderName/" . ($answer->qId + 1) . ".jpg' width='100px' height='auto' />" : $q[$answer->qId]['question']) ?></td>
+                            <td><?php print_r($answer->answer) ?></td>
+                            <td><?php print_r($a[$answer->qId]['answer']) ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else : ?>
+        <div class="container">
+            <h1 class="text-white text-center">Questions not yet finalized.</h1>
+        </div>
+    <?php endif; ?>
 <?php } ?>
 
 <?php

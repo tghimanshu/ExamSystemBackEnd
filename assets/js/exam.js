@@ -54,7 +54,7 @@ $(document).ready(function () {
                       },
                       function (data, status, xhr) {
                         localStorage.removeItem("timeElapsed");
-                        $(window).off("unload");
+                        // $(window).off("unload");
                         $(window).off("beforeunload");
                         window.location = "index.php";
                       }
@@ -70,9 +70,10 @@ $(document).ready(function () {
     }
   }
 
-  window.addEventListener("load", resizeevent);
-  window.addEventListener("resize", resizeevent);
-
+  if (!navigator.userAgent.toLowerCase().includes("android")) {
+    window.addEventListener("load", resizeevent);
+    window.addEventListener("resize", resizeevent);
+  }
   $(window).blur(function () {
     // superErrorContainer.html("<div id='superError'></div>");
     $.post(
@@ -145,7 +146,7 @@ $(document).ready(function () {
   let student_id = $("#student_id").text();
   let paper_id = $("#paper_id").text();
   $(window).on("beforeunload", function () {
-    return "Are you sure want to LOGOUT the session ?";
+    return "Are you sure want to Exit the exam ?";
   });
 
   $(window).on("unload", function () {
@@ -339,6 +340,8 @@ $(document).ready(function () {
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("timeElapsed");
+        // $(window).off("unload");
+        // $(window).off("beforeunload");
         $.post(
           "answer_update.php",
           {
