@@ -59,8 +59,6 @@ $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE `subject_id` IN (SE
 								?>
 								<h6>Start: <?php echo $date1 ?></h6>
 								<h6>Time: <?php echo $time ?></h6>
-								<h6>TimeLeft : <?php echo $startTimeLeft->invert ?></h6>
-								<h6>TimeLeftEND : <?php echo $endTimeLeft->invert ?></h6>
 								<h6>Expired: <?php echo $end ?></h6>
 								<h6>No of Questions: <?php print_r(count(json_decode(urldecode($row['Questions'])))) ?></h6>
 								<hr />
