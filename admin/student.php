@@ -16,6 +16,9 @@ if (!isset($_SESSION['username'])) {
 <?php include "../includes/header.php" ?>
 <div class="app">
     <?php include "../includes/navbar-admin.php" ?>
+    <div class="container mt-4">
+        <a href="index.php?mail=true&class_id=<?php echo $_GET['class_id'] ?>" class="btn btn-success">Send Credentials Mail</a>
+    </div>
     <div class="container">
         <section id="allDepartment">
             <!-- Bascially there will be two loop first loop will take all the streams and second one take all teacher  from iterated stream loop -->
@@ -24,7 +27,7 @@ if (!isset($_SESSION['username'])) {
                 echo "<div class='alert alert-success'>$successMessage</div>";
             }
             ?>
-            <div class="table-responsive mt-5 mx-5">
+            <div class="table-responsive mt-5">
                 <table class="table table-striped table-hover table-bordered blurred-bg">
                     <thead>
                         <tr>

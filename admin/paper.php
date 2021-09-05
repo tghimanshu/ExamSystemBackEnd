@@ -13,31 +13,25 @@ if (!isset($_SESSION['username'])) {
 <?php
 
 // * FOR SUBJECT
-if (isset($_GET['subjectdelete'])) {
-    $deleteQuery = mysqli_query($con, "DELETE FROM `subject` WHERE id = " . $_GET['id']) or die(mysqli_error($con));
-    header("Location: class.php?class_id=" . $_GET['class_id']);
+if (isset($_GET['delete'])) {
+    $deleteQuery = mysqli_query($con, "DELETE FROM `exampaper` WHERE id = " . $_GET['id']) or die(mysqli_error($con));
+    header("Location: paper.php?subject_id=" . $_GET['subject_id']);
 }
 
-if (isset($_GET['subjectedit'])) {
+if (isset($_GET['edit'])) {
     $isEditing = true;
-    $editQuery = mysqli_query($con, "SELECT * FROM `subject` WHERE id = " . $_GET['id']);
+    $editQuery = mysqli_query($con, "SELECT * FROM `exampaper` WHERE id = " . $_GET['id']);
     if (mysqli_num_rows($editQuery) == -1) {
         die("you are dumb");
     }
-    $subjectEditData = mysqli_fetch_assoc($editQuery);
+    $paperEditData = mysqli_fetch_assoc($editQuery);
 }
-
-if (isset($_POST['addsubject'])) {
-    $name = mysqli_escape_string($con, $_POST['name']);
-    $id = mysqli_escape_string($con, $_POST['id']);
-    $addQuery = mysqli_query($con, "INSERT INTO `subject` VALUES (null, '$name', '$id')") or die(mysqli_error($con));
-    header("Location: class.php?class_id=" . $id);
-}
-if (isset($_POST['editsubject'])) {
-    $id = mysqli_escape_string($con, $_POST['id']);
-    $name = mysqli_escape_string($con, $_POST['name']);
-    $addQuery = mysqli_query($con, "UPDATE `subject` SET `name` = '$name' WHERE id = $id") or die(mysqli_error($con));
-    header("Location: class.php?class_id=" . $id);
+if (isset($_POST['editpaper'])) {
+    $id = mysqli_escape_string($con, $_POST['pid']);
+    $pdate = mysqli_escape_string($con, $_POST['pdate']);
+    $penddate = mysqli_escape_string($con, $_POST['penddate']);
+    $addQuery = mysqli_query($con, "UPDATE `exampaper` SET `date` = '$pdate', `endTime` = '$penddate' WHERE id = $id") or die(mysqli_error($con));
+    header("Location: pastpapers.php");
 }
 
 ?>
@@ -47,6 +41,32 @@ if (isset($_POST['editsubject'])) {
 <?php include "../includes/header.php" ?>
 <div class="app">
     <?php include "../includes/navbar-admin.php" ?>
+    <div class="container">
+        <?php if (isset($isEditing)) : ?>
+            <form action="paper.php" method="POST">
+                <?php
+                $startTime = new DateTime($paperEditData['date'], new DateTimeZone("Asia/Kolkata"));
+                $endTime = new DateTime($paperEditData['endTime'], new DateTimeZone("Asia/Kolkata"));
+                $arriveDate = date("c", strtotime($paperEditData['date']));
+                $arriveEndDate = date("c", strtotime($paperEditData['endTime']));
+                list($Date) = explode('+', $arriveDate);
+                list($endDate) = explode('+', $arriveEndDate);
+                $arriveDate = $Date;
+                $arriveEndDate = $endDate;
+                ?>
+                <input type="hidden" value="<?php echo $paperEditData['id'] ?>" name="pid">
+                <div class="input-group mb-2">
+                    <label for="pdate" class="input-group-text">StartDate & time</label>
+                    <input required type="datetime-local" id="pdate" class="form-control" name="pdate" value="<?php echo $arriveDate ?>" />
+                </div>
+                <div class="input-group mb-2">
+                    <label for="penddate" class="input-group-text">End Time</label>
+                    <input required type="datetime-local" id="penddate" class="form-control" name="penddate" value="<?php echo $arriveEndDate ?>" />
+                </div>
+                <button name="editpaper" type="submit" class="btn btn-success mb-4">Edit Paper</button>
+            </form>
+        <?php endif; ?>
+    </div>
     <div class="container">
         <section id="allDepartment">
             <!-- Bascially there will be two loop first loop will take all the streams and second one take all teacher  from iterated stream loop -->
@@ -80,9 +100,9 @@ if (isset($_POST['editsubject'])) {
                                 </td>
                                 <td>
                                     <div class="d-flex justify-content-center">
-                                        <!-- <a href="class.php?subjectedit=true&class_id=<?php echo $_GET['class_id'] ?>&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-primary btn-sm">Edit</a> -->
+                                        <a href="paper.php?edit=true&subject_id=<?php echo $_GET['subject_id'] ?>&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-primary btn-sm">Edit</a>
                                         <a href="answers.php?id=<?php echo $row['id'] ?>" class="ms-2 btn btn-info btn-sm">View</a>
-                                        <!-- <a href="class.php?subjectdelete=true&class_id=<?php echo $_GET['class_id'] ?>&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-danger btn-sm">Remove</a> -->
+                                        <a href="paper.php?delete=true&subject_id=<?php echo $_GET['subject_id'] ?>&id=<?php echo $row['id'] ?>" class="ms-2 btn btn-danger btn-sm">Remove</a>
                                     </div>
                                 </td>
                             </tr>

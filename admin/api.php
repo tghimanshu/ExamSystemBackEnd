@@ -74,7 +74,8 @@ if (!isset($_SESSION['username'])) {
 <?php function studentData($con)
 { ?>
     <div class="container mt-4">
-        <a href="index.php?mail=true" class="btn btn-success">Send Credentials Mail</a>
+        <?php $class_id = mysqli_fetch_assoc(mysqli_query($con, "SELECT class_id from subject WHERE id in (SELECT subject_id from exampaper where id = " . $_GET['examId'] . ")")); ?>
+        <a href="index.php?mail=true&class_id=<?php echo $class_id['class_id'] ?>" class="btn btn-success">Send Credentials Mail</a>
         <a href="export.php?result=true&examId=<?php echo $_GET['examId']; ?>" class="btn btn-primary">Export Results</a>
     </div>
     <div class="table-responsive mt-5 mx-5">

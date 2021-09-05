@@ -5,20 +5,22 @@
 <?php
 
 if (isset($_GET['mail'])) {
-  $mquery = mysqli_query($con, "SELECT * FROM `student`;");
+  $mquery = mysqli_query($con, "SELECT * FROM `student` WHERE class_id = " . $_GET['class_id']);
   while ($value = mysqli_fetch_assoc($mquery)) {
     $name = $value['name'];
     $rollno = $value['rollno'];
     $email = $value['email'];
     $phone = $value['phone'];
     $pass = $value['pwd'];
+    $url = "<script>document.write(window.location.origin);</script>";
+    $finalUrl = "http://" . $_SERVER['HTTP_HOST'] . "/login.php?email=$email&pass=$pass";
     sendMail($email, "SARAF COLLEGE - ACCOUNT CREDENTIALS", "
 		<h1><center>Saraf College presents</center></h1>
 		<h4>Your account credentials for your upcoming examination</h4>
 		<b>Username/Email</b>: $email<br />
 		<b>Password</b>: $pass<br />
 		<br />
-		<b>Login Link</b>: <a href='http://localhost/login.php?email=$email&pass=$pass'>Click here</a>
+		<b>Login Link</b>: <a href='$finalUrl'>Click Here</a>
 		<br />
 		");
   }
