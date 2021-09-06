@@ -198,7 +198,7 @@ if (!isset($_SESSION['username'])) {
     //to get the subject name
     $subjectQuery = mysqli_fetch_assoc(mysqli_query($con, "SELECT * FROM `subject` WHERE `id`=" . $paperData['subject_id']));
     // providing examtype and examname
-    $folderName = "/admin/uploads/" . $date->format('m-d-') . ($paperData['exam_type'] == 1 ? "Regular" : ($paperData['exam_type'] == 2 ? "ATKT" : "Mock")) . $paperData['name'] == '1' ? "Internal" : ($paperData['name'] == '2' ? "External" : $paperData["name"]) . $subjectQuery['name'];
+    $folderName = "/admin/uploads/" . $date->format('m-d-') . $paperData['subject_id'] . $paperData['name'];
 
     ?>
     <?php $marks = 0; ?>
