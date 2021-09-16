@@ -23,7 +23,7 @@
         </div>
         <div class="text-light">Completed</div>
     </a>
-    <a href="index.php?category=epxired" class="btn btn-dark d-flex align-items-center mb-2">
+    <a href="index.php?category=expired" class="btn btn-dark d-flex align-items-center mb-2">
         <div class="btn rounded-circle text-light bg-dark me-2" style="width: 35px; height: 35px">
             5
         </div>
