@@ -31,6 +31,7 @@ if (isset($_POST['submit'])) {
       if ($student['isLoggedIn'] != 1) {
         $_SESSION['username'] = $email;
         $_SESSION['student_id'] = $student['id'];
+        $_SESSION['name'] = $student['name'];
         $_SESSION['class_id'] = $student['class_id'];
         mysqli_query($con, "UPDATE `student` SET `isLoggedIn` = 1 WHERE id = " . $student['id']);
         header("Location: index.php");
