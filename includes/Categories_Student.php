@@ -5,27 +5,21 @@
         </div>
         <div class="text-light">All</div>
     </a>
-    <a href="index.php?category=yettostart" class="btn btn-light d-flex align-items-center mb-2">
+    <a href="index.php?category=pending" class="btn btn-light d-flex align-items-center mb-2">
         <div class="btn rounded-circle text-light bg-success me-2" style="width: 35px; height: 35px">
             2
         </div>
-        <div class="text-light">Yet to start</div>
-    </a>
-    <a href="index.php?category=resume" class="btn btn-light d-flex align-items-center mb-2">
-        <div class="btn rounded-circle text-light bg-info me-2" style="width: 35px; height: 35px">
-            3
-        </div>
-        <div class="text-light">Resume</div>
+        <div class="text-light">Pending</div>
     </a>
     <a href="index.php?category=completed" class="btn btn-light d-flex align-items-center mb-2">
         <div class="btn rounded-circle text-light bg-danger me-2" style="width: 35px; height: 35px">
-            4
+            3
         </div>
         <div class="text-light">Completed</div>
     </a>
     <a href="index.php?category=expired" class="btn btn-dark d-flex align-items-center mb-2">
         <div class="btn rounded-circle text-light bg-dark me-2" style="width: 35px; height: 35px">
-            5
+            4
         </div>
         <div class="text-light">Expired</div>
     </a>

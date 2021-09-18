@@ -47,30 +47,20 @@ if (!isset($_SESSION['username'])) {
 
 			const urlSearchParams = new URLSearchParams(window.location.search);
 			const params = Object.fromEntries(urlSearchParams.entries());
-			let val = 2;
 			if (urlSearchParams.get("category")) {
 				switch (urlSearchParams.get("category")) {
 					case "all":
-						val = 1;
-						break;
-					case "yettostart":
-						val = 2;
-						break;
-					case "resume":
-						val = 3;
-						break;
+						return filterPapers(1);
+					case "pending":
+						return filterPapers(2);
 					case "completed":
-						val = 4;
-						break;
+						return filterPapers(3);
 					case "expired":
-						val = 5;
-						break;
-
+						return filterPapers(4);
+					default:
+						return filterPapers(2);
 				}
 			}
-			setInterval(function() {
-				filterPapers(val);
-			}, 1000);
 		});
 	</script>
 </body>
