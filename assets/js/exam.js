@@ -56,7 +56,7 @@ $(document).ready(function () {
                         localStorage.removeItem("timeElapsed");
                         // $(window).off("unload");
                         $(window).off("beforeunload");
-                        window.location = "index.php";
+                        window.location = "index.php?category=completed";
                       }
                     );
                     localStorage.removeItem("timeElapsed");
@@ -112,7 +112,7 @@ $(document).ready(function () {
                       localStorage.removeItem("timeElapsed");
                       $(window).off("unload");
                       $(window).off("beforeunload");
-                      window.location = "index.php";
+                      window.location = "index.php?category=completed";
                     }
                   );
                   localStorage.removeItem("timeElapsed");
@@ -159,7 +159,7 @@ $(document).ready(function () {
       },
       function (data, status, xhr) {
         localStorage.removeItem("timeElapsed");
-        window.location = "index.php";
+        window.location = "index.php?category=completed";
       }
     );
     localStorage.removeItem("timeElapsed");
@@ -351,7 +351,7 @@ $(document).ready(function () {
           },
           function (data, status, xhr) {
             localStorage.removeItem("timeElapsed");
-            window.location = "index.php";
+            window.location = "index.php?category=completed";
           }
         );
         localStorage.removeItem("timeElapsed");

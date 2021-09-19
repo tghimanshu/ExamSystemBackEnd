@@ -17,7 +17,7 @@ if (mysqli_num_rows($equery) !== 1) {
 $tquery = mysqli_query($con, "SELECT * FROM `answers` WHERE student_id = " . $_SESSION['student_id'] . " AND paper_id = " . $_GET['id']);
 $myCurrPaper = mysqli_fetch_assoc($tquery);
 if ($myCurrPaper['submitted'] === '1') {
-    header("Location: index.php");
+    header("Location: index.php?catergory=completed");
 }
 
 $query = mysqli_query($con, "SELECT * FROM `exampaper` WHERE id = " . $_GET['id']);

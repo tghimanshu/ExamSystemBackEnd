@@ -80,7 +80,7 @@ if (!isset($_SESSION['username'])) {
             $examQuery = mysqli_query($con, "SELECT * FROM `answers` WHERE student_id = " . $_SESSION['student_id'] . " AND paper_id = " . $row['id']);
             $examData = mysqli_fetch_assoc($examQuery);
             ?>
-            <?php if ($endTimeLeft->invert == '0' || (isset($examData) && $examData['submitted'] == 0)) : ?>
+            <?php if (($endTimeLeft->invert == '0' && (isset($examData) ? ($examData['submitted'] == 0 ? true:false):true))) : ?>
                 <div class="col-lg-3 col-md-6 col-12 mt-3 zoom px-2">
                     <div class="card">
                         <div class="card-header bg-primary">
