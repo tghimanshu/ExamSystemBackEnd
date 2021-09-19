@@ -55,6 +55,10 @@ if (isset($_POST['psubmit'])) {
 			$dquery = mysqli_query($con, "SELECT * FROM `subject` WHERE `id`=" . $_GET['subject_id']);
 			$subject = mysqli_fetch_assoc($dquery);
 		}
+		if (isset($_GET['errorQ'])) {
+			echo "<div class='alert alert-danger'>".$_GET['errorQ']."</div>";
+		}
+		if(isset($_GET['errorO'])) echo "<div class='alert alert-danger'>".$_GET['errorO']."</div>";
 		?>
 		<h1 class="text-center text-white mt-4">Add New <?php echo isset($_GET['subject_id']) ? $subject['name'] : "" ?> Question Paper</h1>
 		<form action="addpaper.php" method="POST" enctype="multipart/form-data">
