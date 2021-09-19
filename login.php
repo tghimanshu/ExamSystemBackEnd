@@ -16,7 +16,7 @@ if ((isset($_GET['email']) && $_GET['email'] == "") || (isset($_GET['pass']) && 
 <?php
 session_start();
 if (isset($_SESSION['username'])) {
-  header("Location: index.php");
+  header("Location: index.php?category=pending");
 }
 
 if (isset($_POST['submit'])) {
@@ -33,8 +33,12 @@ if (isset($_POST['submit'])) {
         $_SESSION['student_id'] = $student['id'];
         $_SESSION['name'] = $student['name'];
         $_SESSION['class_id'] = $student['class_id'];
+        $classQuery=mysqli_fetch_assoc(mysqli_query($con,"SELECT `classes`.year,`departments`.name  FROM `classes` INNER JOIN `departments` ON `classes`.department_id=`departments`.id
+        WHERE `classes`.id='".$_SESSION['class_id']."'"));
+        $_SESSION['student_year']=$classQuery['year'];
+        $_SESSION['student_department']=$classQuery['name'];
         mysqli_query($con, "UPDATE `student` SET `isLoggedIn` = 1 WHERE id = " . $student['id']);
-        header("Location: index.php");
+        header("Location: index.php?category=pending");
       } else {
         $error = "You are already Logged In from another device";
       }
