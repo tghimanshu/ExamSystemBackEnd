@@ -17,9 +17,9 @@ array_push($dups, array($val, $c));}
 		}
 		print_r($dups);
 		if (count($dups) != 0) {
-			$error="";
+			$error = "";
 			foreach ($dups as $key => $val) {
-				$error= $error."<h4 class='mb-0'>" . $val[0] . " repeated " . $val[1] . " times</h4> <br />";
+				$error = $error . "<h4 class='mb-0'>" . $val[0] . " repeated " . $val[1] . " times</h4> <br />";
 			}
 $url = "addpaper.php?errorQ=".$error;
 header("Location: $url");
@@ -38,6 +38,7 @@ $url = "addpaper.php?errorO=<h1>Duplicate options in question no: " . $i;
 die("redirect");
 }
 				}
+				die($c);
 				$jsonQ[$i - 1]['qId'] = $i - 1;
 				$jsonQ[$i - 1]['question'] = html_entity_decode($row[0]);
 				$jsonQ[$i - 1]['answer1'] = html_entity_decode($row[1]);
