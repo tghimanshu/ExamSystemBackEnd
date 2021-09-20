@@ -12,7 +12,8 @@ function getQuestionsFromExcel($fileUrl)
 		}
 		$dups = array();
 		foreach (array_count_values($qs) as $val => $c) {
-			if ($c > 1) array_push($dups, array($val, $c));
+			if ($c > 1 && $val != "") {
+array_push($dups, array($val, $c));}
 		}
 		print_r($dups);
 		if (count($dups) != 0) {
@@ -20,7 +21,9 @@ function getQuestionsFromExcel($fileUrl)
 			foreach ($dups as $key => $val) {
 				$error= $error."<h4 class='mb-0'>" . $val[0] . " repeated " . $val[1] . " times</h4> <br />";
 			}
-			header("Location: addpaper.php?errorQ=".$error);
+$url = "addpaper.php?errorQ=".$error;
+header("Location: $url");
+die("redirect");
 		}
 		foreach ($xlsx->rows() as $r => $row) {
 			if ($i == 0) {
@@ -29,7 +32,11 @@ function getQuestionsFromExcel($fileUrl)
 			} else {
 				$answers = array($row[1], $row[2], $row[3], $row[5]);
 				foreach (array_count_values($answers) as $key => $c) {
-					if ($c > 1) header("Location: addpaper.php?errorO=<h1>Duplicate options in question no: " . $i);
+					if ($c > 1){
+$url = "addpaper.php?errorO=<h1>Duplicate options in question no: " . $i;
+	header("Location: $url");
+die("redirect");
+}
 				}
 				$jsonQ[$i - 1]['qId'] = $i - 1;
 				$jsonQ[$i - 1]['question'] = html_entity_decode($row[0]);
