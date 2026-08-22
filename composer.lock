@@ -4,26 +4,28 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f71281910b18df66760b64db6520766a",
+    "content-hash": "e9d9147434da713e524c99924a9e4772",
     "packages": [
         {
             "name": "shuchkin/simplexlsx",
-            "version": "0.8.26",
+            "version": "1.1.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/shuchkin/simplexlsx.git",
-                "reference": "a7232c145a3b700ae2650367d553c1b77081fc5c"
+                "reference": "6e702e73a792fa906319df119e95f8e919e1c157"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/shuchkin/simplexlsx/zipball/a7232c145a3b700ae2650367d553c1b77081fc5c",
-                "reference": "a7232c145a3b700ae2650367d553c1b77081fc5c",
+                "url": "https://api.github.com/repos/shuchkin/simplexlsx/zipball/6e702e73a792fa906319df119e95f8e919e1c157",
+                "reference": "6e702e73a792fa906319df119e95f8e919e1c157",
                 "shasum": ""
             },
             "require": {
                 "ext-libxml": "*",
+                "ext-mbstring": "*",
                 "ext-simplexml": "*",
-                "ext-zlib": "*"
+                "ext-zlib": "*",
+                "php": ">=5.5"
             },
             "type": "library",
             "autoload": {
@@ -39,7 +41,7 @@
                 {
                     "name": "Sergey Shuchkin (SMSPILOT)",
                     "email": "sergey.shuchkin@gmail.com",
-                    "homepage": "http://www.shuchkin.ru/"
+                    "homepage": "https://github.com/shuchkin"
                 }
             ],
             "description": "Parse and retrieve data from Excel XLSx files. MS Excel 2007 workbooks PHP reader.",
@@ -49,13 +51,14 @@
                 "excel",
                 "parser",
                 "php",
+                "reader",
                 "xlsx"
             ],
             "support": {
                 "issues": "https://github.com/shuchkin/simplexlsx/issues",
-                "source": "https://github.com/shuchkin/simplexlsx/tree/0.8.26"
+                "source": "https://github.com/shuchkin/simplexlsx/tree/1.1.17"
             },
-            "time": "2021-08-24T06:02:30+00:00"
+            "time": "2026-08-11T12:02:19+00:00"
         },
         {
             "name": "shuchkin/simplexlsxgen",
@@ -112,10 +115,10 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }
